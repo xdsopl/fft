@@ -1,0 +1,18 @@
+fft - mixed radix fft
+Written in 2015 by <Ahmet Inan> <xdsopl@googlemail.com>
+To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
+You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
+
+Simple and straightforward mixed radix DIT FFT implementation in C++11
+
+It can do FFT of sizes:
+
+N = 2^i * 3^j * 5^k
+
+# make test
+clang++ -stdlib=libc++ -std=c++11 -W -Wall -O3 -march=native benchmark.cc -o benchmark
+./benchmark > /dev/null
+FFT size: 2700
+max error: 8.64283e-07
+speed: 13333 ffts / sec
+
