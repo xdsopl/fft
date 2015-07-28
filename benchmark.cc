@@ -7,6 +7,8 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 
 #include <iostream>
 #include <random>
+#include <complex>
+#include "complex.hh"
 #include "fft.hh"
 
 int main()
@@ -14,20 +16,25 @@ int main()
 	const int bins = 2700;
 	const int loops = 1000;
 	const int ffts = 4 * loops;
-	typedef float type;
+	typedef double type;
+#if 0
+	typedef std::complex<type> complex;
+#else
+	typedef Complex<type> complex;
+#endif
 
 	std::random_device rd;
 	std::default_random_engine generator(rd());
 	std::uniform_real_distribution<type> noise_distribution(-1.0f, 1.0f);
 	auto noise = std::bind(noise_distribution, generator);
 
-	std::complex<type> a[bins], b[bins], c[bins];
+	complex a[bins], b[bins], c[bins];
 	for (int i = 0; i < bins; ++i)
-		a[i] = std::complex<type>(noise(), noise());
+		a[i] = complex(noise(), noise());
 
-	FFT::Normalize<bins, type> norm;
-	FFT::Backward<bins, type> bwd;
-	FFT::Forward<bins, type> fwd;
+	FFT::Normalize<bins, complex> norm;
+	FFT::Backward<bins, complex> bwd;
+	FFT::Forward<bins, complex> fwd;
 
 	auto start = std::chrono::system_clock::now();
 	type max_error = 0;
@@ -37,13 +44,13 @@ int main()
 		bwd(c, b);
 		norm(c);
 		for (int i = 0; i < bins; ++i)
-			max_error = std::max(max_error, std::abs(a[i] - c[i]));
+			max_error = std::max(max_error, abs(a[i] - c[i]));
 		fwd(b, c);
 		norm(b);
 		bwd(a, b);
 		norm(a);
 		for (int i = 0; i < bins; ++i)
-			max_error = std::max(max_error, std::abs(a[i] - c[i]));
+			max_error = std::max(max_error, abs(a[i] - c[i]));
 	}
 	auto end = std::chrono::system_clock::now();
 	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);

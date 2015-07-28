@@ -8,60 +8,55 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 #ifndef FFT_HH
 #define FFT_HH
 
-#include <complex>
-#include <cmath>
-
 namespace FFT {
 
 template <typename TYPE>
-static inline std::complex<TYPE> twiddle(std::complex<TYPE> a, std::complex<TYPE> b)
+static inline TYPE twiddle(TYPE a, TYPE b)
 {
-	return std::complex<TYPE>(a.imag() - b.imag(), b.real() - a.real());
+	return TYPE(a.imag() - b.imag(), b.real() - a.real());
 }
 
 template <typename TYPE>
-static inline void fwd2(std::complex<TYPE> *out0, std::complex<TYPE> *out1,
-		std::complex<TYPE> in0, std::complex<TYPE> in1)
+static inline void fwd2(TYPE *out0, TYPE *out1, TYPE in0, TYPE in1)
 {
 	*out0 = in0 + in1;
 	*out1 = in0 - in1;
 }
 
 template <typename TYPE>
-static inline void bwd2(std::complex<TYPE> *out0, std::complex<TYPE> *out1,
-		std::complex<TYPE> in0, std::complex<TYPE> in1)
+static inline void bwd2(TYPE *out0, TYPE *out1, TYPE in0, TYPE in1)
 {
 	*out0 = in0 + in1;
 	*out1 = in0 - in1;
 }
 
 template <typename TYPE>
-static inline void fwd3(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std::complex<TYPE> *out2,
-		std::complex<TYPE> in0, std::complex<TYPE> in1, std::complex<TYPE> in2)
+static inline void fwd3(TYPE *out0, TYPE *out1, TYPE *out2, TYPE in0, TYPE in1, TYPE in2)
 {
-	static const TYPE half(TYPE(1) / TYPE(2)), sqrt3(std::sqrt(TYPE(3)));
-	std::complex<TYPE> a(in1 + in2), b(sqrt3 * twiddle(in2, in1));
+	typedef typename TYPE::value_type value_type;
+	static const value_type half(value_type(1) / value_type(2)), sqrt3(std::sqrt(value_type(3)));
+	TYPE a(in1 + in2), b(sqrt3 * twiddle(in2, in1));
 	*out0 = in0 + a;
 	*out1 = in0 - half * (a + b);
 	*out2 = in0 - half * (a - b);
 }
 
 template <typename TYPE>
-static inline void bwd3(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std::complex<TYPE> *out2,
-		std::complex<TYPE> in0, std::complex<TYPE> in1, std::complex<TYPE> in2)
+static inline void bwd3(TYPE *out0, TYPE *out1, TYPE *out2, TYPE in0, TYPE in1, TYPE in2)
 {
-	static const TYPE half(TYPE(1) / TYPE(2)), sqrt3(std::sqrt(TYPE(3)));
-	std::complex<TYPE> a(in1 + in2), b(sqrt3 * twiddle(in2, in1));
+	typedef typename TYPE::value_type value_type;
+	static const value_type half(value_type(1) / value_type(2)), sqrt3(std::sqrt(value_type(3)));
+	TYPE a(in1 + in2), b(sqrt3 * twiddle(in2, in1));
 	*out0 = in0 + a;
 	*out1 = in0 - half * (a - b);
 	*out2 = in0 - half * (a + b);
 }
 
 template <typename TYPE>
-static inline void fwd4(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std::complex<TYPE> *out2, std::complex<TYPE> *out3,
-		std::complex<TYPE> in0, std::complex<TYPE> in1, std::complex<TYPE> in2, std::complex<TYPE> in3)
+static inline void fwd4(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
+		TYPE in0, TYPE in1, TYPE in2, TYPE in3)
 {
-	std::complex<TYPE> a(in0 + in2), b(in0 - in2), c(in1 + in3), d(twiddle(in1, in3));
+	TYPE a(in0 + in2), b(in0 - in2), c(in1 + in3), d(twiddle(in1, in3));
 	*out0 = a + c;
 	*out1 = b + d;
 	*out2 = a - c;
@@ -69,10 +64,10 @@ static inline void fwd4(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std:
 }
 
 template <typename TYPE>
-static inline void bwd4(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std::complex<TYPE> *out2, std::complex<TYPE> *out3,
-		std::complex<TYPE> in0, std::complex<TYPE> in1, std::complex<TYPE> in2, std::complex<TYPE> in3)
+static inline void bwd4(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
+		TYPE in0, TYPE in1, TYPE in2, TYPE in3)
 {
-	std::complex<TYPE> a(in0 + in2), b(in0 - in2), c(in1 + in3), d(twiddle(in1, in3));
+	TYPE a(in0 + in2), b(in0 - in2), c(in1 + in3), d(twiddle(in1, in3));
 	*out0 = a + c;
 	*out1 = b - d;
 	*out2 = a - c;
@@ -80,14 +75,15 @@ static inline void bwd4(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std:
 }
 
 template <typename TYPE>
-static inline void fwd5(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std::complex<TYPE> *out2, std::complex<TYPE> *out3, std::complex<TYPE> *out4,
-		std::complex<TYPE> in0, std::complex<TYPE> in1, std::complex<TYPE> in2, std::complex<TYPE> in3, std::complex<TYPE> in4)
+static inline void fwd5(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4,
+		TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 {
-	static const TYPE r1(2 * M_PI / 5), c1(std::cos(r1)), s1(std::sin(r1));
-	static const TYPE r2(4 * M_PI / 5), c2(std::cos(r2)), s2(std::sin(r2));
-	std::complex<TYPE> a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-	std::complex<TYPE> c1a(c1 * a), c2b(c2 * b), s1c(s1 * c), s2d(s2 * d);
-	std::complex<TYPE> c2a(c2 * a), c1b(c1 * b), s2c(s2 * c), s1d(s1 * d);
+	typedef typename TYPE::value_type value_type;
+	static const value_type r1(2 * M_PI / 5), c1(std::cos(r1)), s1(std::sin(r1));
+	static const value_type r2(4 * M_PI / 5), c2(std::cos(r2)), s2(std::sin(r2));
+	TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
+	TYPE c1a(c1 * a), c2b(c2 * b), s1c(s1 * c), s2d(s2 * d);
+	TYPE c2a(c2 * a), c1b(c1 * b), s2c(s2 * c), s1d(s1 * d);
 	*out0 = in0 + a + b;
 	*out1 = in0 + c1a + c2b + s1c + s2d;
 	*out2 = in0 + c2a + c1b + s2c - s1d;
@@ -96,14 +92,15 @@ static inline void fwd5(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std:
 }
 
 template <typename TYPE>
-static inline void bwd5(std::complex<TYPE> *out0, std::complex<TYPE> *out1, std::complex<TYPE> *out2, std::complex<TYPE> *out3, std::complex<TYPE> *out4,
-		std::complex<TYPE> in0, std::complex<TYPE> in1, std::complex<TYPE> in2, std::complex<TYPE> in3, std::complex<TYPE> in4)
+static inline void bwd5(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4,
+		TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 {
-	static const TYPE r1(2 * M_PI / 5), c1(std::cos(r1)), s1(std::sin(r1));
-	static const TYPE r2(4 * M_PI / 5), c2(std::cos(r2)), s2(std::sin(r2));
-	std::complex<TYPE> a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-	std::complex<TYPE> c1a(c1 * a), c2b(c2 * b), s1c(s1 * c), s2d(s2 * d);
-	std::complex<TYPE> c2a(c2 * a), c1b(c1 * b), s2c(s2 * c), s1d(s1 * d);
+	typedef typename TYPE::value_type value_type;
+	static const value_type r1(2 * M_PI / 5), c1(std::cos(r1)), s1(std::sin(r1));
+	static const value_type r2(4 * M_PI / 5), c2(std::cos(r2)), s2(std::sin(r2));
+	TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
+	TYPE c1a(c1 * a), c2b(c2 * b), s1c(s1 * c), s2d(s2 * d);
+	TYPE c2a(c2 * a), c1b(c1 * b), s2c(s2 * c), s1d(s1 * d);
 	*out0 = in0 + a + b;
 	*out1 = in0 + c1a + c2b - s1c - s2d;
 	*out2 = in0 + c2a + c1b - s2c + s1d;
@@ -132,7 +129,7 @@ struct DitFwd {};
 template <int S, typename TYPE>
 struct DitFwd<1, 1, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
+	static inline void fwd(TYPE *out, TYPE *in, TYPE *)
 	{
 		*out = *in;
 	}
@@ -141,7 +138,7 @@ struct DitFwd<1, 1, S, TYPE>
 template <int S, typename TYPE>
 struct DitFwd<2, 2, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
+	static inline void fwd(TYPE *out, TYPE *in, TYPE *)
 	{
 		fwd2(out, out + 1, in[0], in[S]);
 	}
@@ -150,7 +147,7 @@ struct DitFwd<2, 2, S, TYPE>
 template <int S, typename TYPE>
 struct DitFwd<3, 3, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
+	static inline void fwd(TYPE *out, TYPE *in, TYPE *)
 	{
 		fwd3(out, out + 1, out + 2, in[0], in[S], in[2 * S]);
 	}
@@ -159,7 +156,7 @@ struct DitFwd<3, 3, S, TYPE>
 template <int S, typename TYPE>
 struct DitFwd<4, 4, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
+	static inline void fwd(TYPE *out, TYPE *in, TYPE *)
 	{
 		fwd4(out, out + 1, out + 2, out + 3, in[0], in[S], in[2 * S], in[3 * S]);
 	}
@@ -168,7 +165,7 @@ struct DitFwd<4, 4, S, TYPE>
 template <int S, typename TYPE>
 struct DitFwd<5, 5, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
+	static inline void fwd(TYPE *out, TYPE *in, TYPE *)
 	{
 		fwd5(out, out + 1, out + 2, out + 3, out + 4, in[0], in[S], in[2 * S], in[3 * S], in[4 * S]);
 	}
@@ -177,7 +174,7 @@ struct DitFwd<5, 5, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitFwd<2, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitFwd<split(N / 2), N / 2, 2 * S, TYPE> dit;
 		dit::fwd(out, in, z);
@@ -190,7 +187,7 @@ struct DitFwd<2, N, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitFwd<3, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitFwd<split(N / 3), N / 3, 3 * S, TYPE> dit;
 		dit::fwd(out, in, z);
@@ -205,7 +202,7 @@ struct DitFwd<3, N, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitFwd<4, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitFwd<split(N / 4), N / 4, 4 * S, TYPE> dit;
 		dit::fwd(out, in, z);
@@ -223,7 +220,7 @@ struct DitFwd<4, N, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitFwd<5, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitFwd<split(N / 5), N / 5, 5 * S, TYPE> dit;
 		dit::fwd(out, in, z);
@@ -245,7 +242,7 @@ struct DitBwd {};
 template <int S, typename TYPE>
 struct DitBwd<1, 1, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
+	static inline void bwd(TYPE *out, TYPE *in, TYPE *)
 	{
 		*out = *in;
 	}
@@ -254,7 +251,7 @@ struct DitBwd<1, 1, S, TYPE>
 template <int S, typename TYPE>
 struct DitBwd<2, 2, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
+	static inline void bwd(TYPE *out, TYPE *in, TYPE *) {
 		bwd2(out, out + 1, in[0], in[S]);
 	}
 };
@@ -262,7 +259,7 @@ struct DitBwd<2, 2, S, TYPE>
 template <int S, typename TYPE>
 struct DitBwd<3, 3, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
+	static inline void bwd(TYPE *out, TYPE *in, TYPE *) {
 		bwd3(out, out + 1, out + 2, in[0], in[S], in[2 * S]);
 	}
 };
@@ -270,7 +267,7 @@ struct DitBwd<3, 3, S, TYPE>
 template <int S, typename TYPE>
 struct DitBwd<4, 4, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
+	static inline void bwd(TYPE *out, TYPE *in, TYPE *) {
 		bwd4(out, out + 1, out + 2, out + 3, in[0], in[S], in[2 * S], in[3 * S]);
 	}
 };
@@ -278,7 +275,7 @@ struct DitBwd<4, 4, S, TYPE>
 template <int S, typename TYPE>
 struct DitBwd<5, 5, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
+	static inline void bwd(TYPE *out, TYPE *in, TYPE *) {
 		bwd5(out, out + 1, out + 2, out + 3, out + 4, in[0], in[S], in[2 * S], in[3 * S], in[4 * S]);
 	}
 };
@@ -286,7 +283,7 @@ struct DitBwd<5, 5, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitBwd<2, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitBwd<split(N / 2), N / 2, 2 * S, TYPE> dit;
 		dit::bwd(out, in, z);
@@ -299,7 +296,7 @@ struct DitBwd<2, N, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitBwd<3, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitBwd<split(N / 3), N / 3, 3 * S, TYPE> dit;
 		dit::bwd(out, in, z);
@@ -314,7 +311,7 @@ struct DitBwd<3, N, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitBwd<4, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitBwd<split(N / 4), N / 4, 4 * S, TYPE> dit;
 		dit::bwd(out, in, z);
@@ -332,7 +329,7 @@ struct DitBwd<4, N, S, TYPE>
 template <int N, int S, typename TYPE>
 struct DitBwd<5, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
+	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
 		typedef DitBwd<split(N / 5), N / 5, 5 * S, TYPE> dit;
 		dit::bwd(out, in, z);
@@ -351,11 +348,12 @@ struct DitBwd<5, N, S, TYPE>
 template <int BINS, typename TYPE, int SIGN>
 struct Factors
 {
-	std::complex<TYPE> z[BINS];
+	typedef typename TYPE::value_type value_type;
+	TYPE z[BINS];
 	Factors()
 	{
 		for (int n = 0; n < BINS; ++n)
-			z[n] = exp(std::complex<TYPE>(0, TYPE(SIGN * 2 * M_PI) * TYPE(n) / TYPE(BINS)));
+			z[n] = exp(TYPE(0, value_type(SIGN * 2 * M_PI) * value_type(n) / value_type(BINS)));
 	}
 };
 
@@ -364,7 +362,8 @@ class Forward
 {
 	Factors<BINS, TYPE, -1> factors;
 public:
-	inline void operator ()(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	typedef typename TYPE::value_type value_type;
+	inline void operator ()(TYPE *out, TYPE *in)
 	{
 		DitFwd<split(BINS), BINS, 1, TYPE>::fwd(out, in, factors.z);
 	}
@@ -375,7 +374,8 @@ class Backward
 {
 	Factors<BINS, TYPE, 1> factors;
 public:
-	inline void operator ()(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	typedef typename TYPE::value_type value_type;
+	inline void operator ()(TYPE *out, TYPE *in)
 	{
 		DitBwd<split(BINS), BINS, 1, TYPE>::bwd(out, in, factors.z);
 	}
@@ -384,9 +384,10 @@ public:
 template <int BINS, typename TYPE>
 class Normalize
 {
-	const TYPE factor = sqrt(TYPE(1) / TYPE(BINS));
+	typedef typename TYPE::value_type value_type;
+	const value_type factor = sqrt(value_type(1) / value_type(BINS));
 public:
-	inline void operator ()(std::complex<TYPE> *io)
+	inline void operator ()(TYPE *io)
 	{
 		for (int n = 0; n < BINS; ++n)
 			io[n] *= factor;
