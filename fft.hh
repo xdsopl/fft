@@ -186,7 +186,7 @@ struct Dit<2, N, S, TYPE, SIGN>
 	static void dit(TYPE *out, TYPE *in, TYPE *z)
 	{
 		for (int o = 0, i = 0; o < N; o += N / 2, i += S)
-			Dit<split(N / 2), N / 2, 2 * S, TYPE, SIGN>::ditd(out + o, in + i, z);
+			Dit<split(N / 2), N / 2, 2 * S, TYPE, SIGN>::dit(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 2; k0 < N / 2; ++k0, ++k1)
 			Dit<2, 2, S, TYPE, SIGN>::dft(out + k0, out + k1, out[k0], z[k0 * S] * out[k1]);
 	}
