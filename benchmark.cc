@@ -76,6 +76,17 @@ int main()
 	test<54, complex>();
 	test<60, complex>();
 	test<64, complex>();
+	test<72, complex>();
+	test<75, complex>();
+	test<80, complex>();
+	test<81, complex>();
+	test<90, complex>();
+	test<96, complex>();
+	test<100, complex>();
+	test<108, complex>();
+	test<120, complex>();
+	test<125, complex>();
+	test<128, complex>();
 
 	std::random_device rd;
 	std::default_random_engine generator(rd());
