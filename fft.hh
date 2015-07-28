@@ -126,95 +126,92 @@ static constexpr int split(int N)
 	return (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%2)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
 }
 
-template <int RADIX, int N, int S, typename FACTORS, typename TYPE>
+template <int RADIX, int N, int S, typename TYPE>
 struct DitFwd {};
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitFwd<1, 1, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitFwd<1, 1, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
 	{
 		*out = *in;
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitFwd<2, 2, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitFwd<2, 2, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
 	{
 		fwd2(out, out + 1, in[0], in[S]);
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitFwd<3, 3, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitFwd<3, 3, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
 	{
 		fwd3(out, out + 1, out + 2, in[0], in[S], in[2 * S]);
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitFwd<4, 4, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitFwd<4, 4, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
 	{
 		fwd4(out, out + 1, out + 2, out + 3, in[0], in[S], in[2 * S], in[3 * S]);
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitFwd<5, 5, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitFwd<5, 5, S, TYPE>
 {
-	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static inline void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
 	{
 		fwd5(out, out + 1, out + 2, out + 3, out + 4, in[0], in[S], in[2 * S], in[3 * S], in[4 * S]);
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitFwd<2, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitFwd<2, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitFwd<split(N / 2), N / 2, 2 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::fwd(out, in);
-		dit::fwd(out + N / 2, in + S);
+		typedef DitFwd<split(N / 2), N / 2, 2 * S, TYPE> dit;
+		dit::fwd(out, in, z);
+		dit::fwd(out + N / 2, in + S, z);
 		for (int k0 = 0, k1 = N / 2; k0 < N / 2; ++k0, ++k1)
 			fwd2(out + k0, out + k1, out[k0], z[k0 * S] * out[k1]);
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitFwd<3, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitFwd<3, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitFwd<split(N / 3), N / 3, 3 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::fwd(out, in);
-		dit::fwd(out + N / 3, in + S);
-		dit::fwd(out + 2 * N / 3, in + 2 * S);
+		typedef DitFwd<split(N / 3), N / 3, 3 * S, TYPE> dit;
+		dit::fwd(out, in, z);
+		dit::fwd(out + N / 3, in + S, z);
+		dit::fwd(out + 2 * N / 3, in + 2 * S, z);
 		for (int k0 = 0, k1 = N / 3, k2 = 2 * N / 3; k0 < N / 3; ++k0, ++k1, ++k2)
 			fwd3(out + k0, out + k1, out + k2,
 				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2]);
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitFwd<4, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitFwd<4, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitFwd<split(N / 4), N / 4, 4 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::fwd(out, in);
-		dit::fwd(out + N / 4, in + S);
-		dit::fwd(out + 2 * N / 4, in + 2 * S);
-		dit::fwd(out + 3 * N / 4, in + 3 * S);
+		typedef DitFwd<split(N / 4), N / 4, 4 * S, TYPE> dit;
+		dit::fwd(out, in, z);
+		dit::fwd(out + N / 4, in + S, z);
+		dit::fwd(out + 2 * N / 4, in + 2 * S, z);
+		dit::fwd(out + 3 * N / 4, in + 3 * S, z);
 		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4;
 				k0 < N / 4; ++k0, ++k1, ++k2, ++k3)
 			fwd4(out + k0, out + k1, out + k2, out + k3,
@@ -223,18 +220,17 @@ struct DitFwd<4, N, S, FACTORS, TYPE>
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitFwd<5, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitFwd<5, N, S, TYPE>
 {
-	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void fwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitFwd<split(N / 5), N / 5, 5 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::fwd(out, in);
-		dit::fwd(out + N / 5, in + S);
-		dit::fwd(out + 2 * N / 5, in + 2 * S);
-		dit::fwd(out + 3 * N / 5, in + 3 * S);
-		dit::fwd(out + 4 * N / 5, in + 4 * S);
+		typedef DitFwd<split(N / 5), N / 5, 5 * S, TYPE> dit;
+		dit::fwd(out, in, z);
+		dit::fwd(out + N / 5, in + S, z);
+		dit::fwd(out + 2 * N / 5, in + 2 * S, z);
+		dit::fwd(out + 3 * N / 5, in + 3 * S, z);
+		dit::fwd(out + 4 * N / 5, in + 4 * S, z);
 		for (int k0 = 0, k1 = N / 5, k2 = 2 * N / 5, k3 = 3 * N / 5, k4 = 4 * N / 5;
 				k0 < N / 5; ++k0, ++k1, ++k2, ++k3, ++k4)
 			fwd5(out + k0, out + k1, out + k2, out + k3, out + k4,
@@ -243,91 +239,88 @@ struct DitFwd<5, N, S, FACTORS, TYPE>
 	}
 };
 
-template <int RADIX, int N, int S, typename FACTORS, typename TYPE>
+template <int RADIX, int N, int S, typename TYPE>
 struct DitBwd {};
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitBwd<1, 1, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitBwd<1, 1, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *)
 	{
 		*out = *in;
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitBwd<2, 2, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitBwd<2, 2, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in) {
+	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
 		bwd2(out, out + 1, in[0], in[S]);
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitBwd<3, 3, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitBwd<3, 3, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in) {
+	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
 		bwd3(out, out + 1, out + 2, in[0], in[S], in[2 * S]);
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitBwd<4, 4, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitBwd<4, 4, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in) {
+	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
 		bwd4(out, out + 1, out + 2, out + 3, in[0], in[S], in[2 * S], in[3 * S]);
 	}
 };
 
-template <int S, typename FACTORS, typename TYPE>
-struct DitBwd<5, 5, S, FACTORS, TYPE>
+template <int S, typename TYPE>
+struct DitBwd<5, 5, S, TYPE>
 {
-	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in) {
+	static inline void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *) {
 		bwd5(out, out + 1, out + 2, out + 3, out + 4, in[0], in[S], in[2 * S], in[3 * S], in[4 * S]);
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitBwd<2, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitBwd<2, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitBwd<split(N / 2), N / 2, 2 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::bwd(out, in);
-		dit::bwd(out + N / 2, in + S);
+		typedef DitBwd<split(N / 2), N / 2, 2 * S, TYPE> dit;
+		dit::bwd(out, in, z);
+		dit::bwd(out + N / 2, in + S, z);
 		for (int k0 = 0, k1 = N / 2; k0 < N / 2; ++k0, ++k1)
 			bwd2(out + k0, out + k1, out[k0], z[k0 * S] * out[k1]);
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitBwd<3, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitBwd<3, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitBwd<split(N / 3), N / 3, 3 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::bwd(out, in);
-		dit::bwd(out + N / 3, in + S);
-		dit::bwd(out + 2 * N / 3, in + 2 * S);
+		typedef DitBwd<split(N / 3), N / 3, 3 * S, TYPE> dit;
+		dit::bwd(out, in, z);
+		dit::bwd(out + N / 3, in + S, z);
+		dit::bwd(out + 2 * N / 3, in + 2 * S, z);
 		for (int k0 = 0, k1 = N / 3, k2 = 2 * N / 3; k0 < N / 3; ++k0, ++k1, ++k2)
 			bwd3(out + k0, out + k1, out + k2,
 				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2]);
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitBwd<4, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitBwd<4, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitBwd<split(N / 4), N / 4, 4 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::bwd(out, in);
-		dit::bwd(out + N / 4, in + S);
-		dit::bwd(out + 2 * N / 4, in + 2 * S);
-		dit::bwd(out + 3 * N / 4, in + 3 * S);
+		typedef DitBwd<split(N / 4), N / 4, 4 * S, TYPE> dit;
+		dit::bwd(out, in, z);
+		dit::bwd(out + N / 4, in + S, z);
+		dit::bwd(out + 2 * N / 4, in + 2 * S, z);
+		dit::bwd(out + 3 * N / 4, in + 3 * S, z);
 		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4;
 				k0 < N / 4; ++k0, ++k1, ++k2, ++k3)
 			bwd4(out + k0, out + k1, out + k2, out + k3,
@@ -336,18 +329,17 @@ struct DitBwd<4, N, S, FACTORS, TYPE>
 	}
 };
 
-template <int N, int S, typename FACTORS, typename TYPE>
-struct DitBwd<5, N, S, FACTORS, TYPE>
+template <int N, int S, typename TYPE>
+struct DitBwd<5, N, S, TYPE>
 {
-	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	static void bwd(std::complex<TYPE> *out, std::complex<TYPE> *in, std::complex<TYPE> *z)
 	{
-		typedef DitBwd<split(N / 5), N / 5, 5 * S, FACTORS, TYPE> dit;
-		FACTORS z;
-		dit::bwd(out, in);
-		dit::bwd(out + N / 5, in + S);
-		dit::bwd(out + 2 * N / 5, in + 2 * S);
-		dit::bwd(out + 3 * N / 5, in + 3 * S);
-		dit::bwd(out + 4 * N / 5, in + 4 * S);
+		typedef DitBwd<split(N / 5), N / 5, 5 * S, TYPE> dit;
+		dit::bwd(out, in, z);
+		dit::bwd(out + N / 5, in + S, z);
+		dit::bwd(out + 2 * N / 5, in + 2 * S, z);
+		dit::bwd(out + 3 * N / 5, in + 3 * S, z);
+		dit::bwd(out + 4 * N / 5, in + 4 * S, z);
 		for (int k0 = 0, k1 = N / 5, k2 = 2 * N / 5, k3 = 3 * N / 5, k4 = 4 * N / 5;
 				k0 < N / 5; ++k0, ++k1, ++k2, ++k3, ++k4)
 			bwd5(out + k0, out + k1, out + k2, out + k3, out + k4,
@@ -357,40 +349,35 @@ struct DitBwd<5, N, S, FACTORS, TYPE>
 };
 
 template <int BINS, typename TYPE, int SIGN>
-class Factors
+struct Factors
 {
-	static const struct StaticFactors
+	std::complex<TYPE> z[BINS];
+	Factors()
 	{
-		std::complex<TYPE> z[BINS];
-		StaticFactors()
-		{
-			for (int n = 0; n < BINS; ++n)
-				z[n] = exp(std::complex<TYPE>(0, TYPE(SIGN * 2 * M_PI) * TYPE(n) / TYPE(BINS)));
-		}
-		inline std::complex<TYPE> operator [](int i) const { return z[i]; }
-	} factors;
-public:
-	inline std::complex<TYPE> operator [](int i) const { return factors[i]; }
-};
-
-template <int BINS, typename TYPE, int SIGN>
-const struct Factors<BINS, TYPE, SIGN>::StaticFactors Factors<BINS, TYPE, SIGN>::factors;
-
-template <int BINS, typename TYPE>
-struct Forward
-{
-	inline void operator ()(std::complex<TYPE> *out, std::complex<TYPE> *in)
-	{
-		DitFwd<split(BINS), BINS, 1, Factors<BINS, TYPE, -1>, TYPE>::fwd(out, in);
+		for (int n = 0; n < BINS; ++n)
+			z[n] = exp(std::complex<TYPE>(0, TYPE(SIGN * 2 * M_PI) * TYPE(n) / TYPE(BINS)));
 	}
 };
 
 template <int BINS, typename TYPE>
-struct Backward
+class Forward
 {
+	Factors<BINS, TYPE, -1> factors;
+public:
 	inline void operator ()(std::complex<TYPE> *out, std::complex<TYPE> *in)
 	{
-		DitBwd<split(BINS), BINS, 1, Factors<BINS, TYPE, 1>, TYPE>::bwd(out, in);
+		DitFwd<split(BINS), BINS, 1, TYPE>::fwd(out, in, factors.z);
+	}
+};
+
+template <int BINS, typename TYPE>
+class Backward
+{
+	Factors<BINS, TYPE, 1> factors;
+public:
+	inline void operator ()(std::complex<TYPE> *out, std::complex<TYPE> *in)
+	{
+		DitBwd<split(BINS), BINS, 1, TYPE>::bwd(out, in, factors.z);
 	}
 };
 
