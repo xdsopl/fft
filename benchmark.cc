@@ -23,7 +23,7 @@ int main()
 
 	std::complex<type> a[bins], b[bins], c[bins];
 	for (int i = 0; i < bins; ++i)
-		a[i] = noise();
+		a[i] = std::complex<type>(noise(), noise());
 
 	FFT::Normalize<bins, type> norm;
 	FFT::Backward<bins, type> bwd;
