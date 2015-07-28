@@ -13,6 +13,6 @@ N = 2^i * 3^j * 5^k
 clang++ -stdlib=libc++ -std=c++11 -W -Wall -O3 -march=native benchmark.cc -o benchmark
 ./benchmark > /dev/null
 FFT size: 2700
-max error: 8.64283e-07
-speed: 13333 ffts / sec
+max error: 2.26442e-15
+speed: 21052 ffts / sec
 
