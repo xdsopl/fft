@@ -12,7 +12,43 @@ N = 2^i * 3^j * 5^k
 # make test
 clang++ -stdlib=libc++ -std=c++11 -W -Wall -O3 -march=native benchmark.cc -o benchmark
 ./benchmark > /dev/null
-FFT size: 2700
-max error: 2.26442e-15
-speed: 21052 ffts / sec
+FFT size: 1 max error: 0
+FFT size: 2 max error: 1.57009e-16
+FFT size: 3 max error: 1.57009e-16
+FFT size: 4 max error: 1.57009e-16
+FFT size: 5 max error: 4.96507e-16
+FFT size: 6 max error: 2.48253e-16
+FFT size: 8 max error: 2.48253e-16
+FFT size: 9 max error: 4.00297e-16
+FFT size: 10 max error: 2.77556e-16
+FFT size: 12 max error: 4.96507e-16
+FFT size: 15 max error: 7.02167e-16
+FFT size: 16 max error: 3.33067e-16
+FFT size: 18 max error: 5.55112e-16
+FFT size: 20 max error: 4.71845e-16
+FFT size: 24 max error: 3.51083e-16
+FFT size: 25 max error: 3.51083e-16
+FFT size: 27 max error: 5.97873e-16
+FFT size: 30 max error: 7.55033e-16
+FFT size: 32 max error: 5.02866e-16
+FFT size: 36 max error: 5.97873e-16
+FFT size: 40 max error: 4.2367e-16
+FFT size: 45 max error: 4.57757e-16
+FFT size: 48 max error: 4.57757e-16
+FFT size: 50 max error: 7.26433e-16
+FFT size: 54 max error: 7.4476e-16
+FFT size: 60 max error: 6.75322e-16
+FFT size: 64 max error: 3.55445e-16
+FFT size: 72 max error: 5.90092e-16
+FFT size: 75 max error: 8.00593e-16
+FFT size: 80 max error: 4.57757e-16
+FFT size: 81 max error: 8.9509e-16
+FFT size: 90 max error: 6.75322e-16
+FFT size: 96 max error: 5.11788e-16
+FFT size: 100 max error: 8.88178e-16
+FFT size: 108 max error: 7.55033e-16
+FFT size: 120 max error: 1.20089e-15
+FFT size: 125 max error: 6.66134e-16
+FFT size: 128 max error: 5.66105e-16
+FFT size: 2700 max error after 10000 ffts: 6.44065e-12 speed: 44843 ffts / sec
 
