@@ -176,9 +176,8 @@ struct DitFwd<2, N, S, TYPE>
 {
 	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitFwd<split(N / 2), N / 2, 2 * S, TYPE> dit;
-		dit::fwd(out, in, z);
-		dit::fwd(out + N / 2, in + S, z);
+		for (int o = 0, i = 0; o < N; o += N / 2, i += S)
+			DitFwd<split(N / 2), N / 2, 2 * S, TYPE>::fwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 2; k0 < N / 2; ++k0, ++k1)
 			fwd2(out + k0, out + k1, out[k0], z[k0 * S] * out[k1]);
 	}
@@ -189,10 +188,8 @@ struct DitFwd<3, N, S, TYPE>
 {
 	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitFwd<split(N / 3), N / 3, 3 * S, TYPE> dit;
-		dit::fwd(out, in, z);
-		dit::fwd(out + N / 3, in + S, z);
-		dit::fwd(out + 2 * N / 3, in + 2 * S, z);
+		for (int o = 0, i = 0; o < N; o += N / 3, i += S)
+			DitFwd<split(N / 3), N / 3, 3 * S, TYPE>::fwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 3, k2 = 2 * N / 3; k0 < N / 3; ++k0, ++k1, ++k2)
 			fwd3(out + k0, out + k1, out + k2,
 				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2]);
@@ -204,11 +201,8 @@ struct DitFwd<4, N, S, TYPE>
 {
 	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitFwd<split(N / 4), N / 4, 4 * S, TYPE> dit;
-		dit::fwd(out, in, z);
-		dit::fwd(out + N / 4, in + S, z);
-		dit::fwd(out + 2 * N / 4, in + 2 * S, z);
-		dit::fwd(out + 3 * N / 4, in + 3 * S, z);
+		for (int o = 0, i = 0; o < N; o += N / 4, i += S)
+			DitFwd<split(N / 4), N / 4, 4 * S, TYPE>::fwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4;
 				k0 < N / 4; ++k0, ++k1, ++k2, ++k3)
 			fwd4(out + k0, out + k1, out + k2, out + k3,
@@ -222,12 +216,8 @@ struct DitFwd<5, N, S, TYPE>
 {
 	static void fwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitFwd<split(N / 5), N / 5, 5 * S, TYPE> dit;
-		dit::fwd(out, in, z);
-		dit::fwd(out + N / 5, in + S, z);
-		dit::fwd(out + 2 * N / 5, in + 2 * S, z);
-		dit::fwd(out + 3 * N / 5, in + 3 * S, z);
-		dit::fwd(out + 4 * N / 5, in + 4 * S, z);
+		for (int o = 0, i = 0; o < N; o += N / 5, i += S)
+			DitFwd<split(N / 5), N / 5, 5 * S, TYPE>::fwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 5, k2 = 2 * N / 5, k3 = 3 * N / 5, k4 = 4 * N / 5;
 				k0 < N / 5; ++k0, ++k1, ++k2, ++k3, ++k4)
 			fwd5(out + k0, out + k1, out + k2, out + k3, out + k4,
@@ -285,9 +275,8 @@ struct DitBwd<2, N, S, TYPE>
 {
 	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitBwd<split(N / 2), N / 2, 2 * S, TYPE> dit;
-		dit::bwd(out, in, z);
-		dit::bwd(out + N / 2, in + S, z);
+		for (int o = 0, i = 0; o < N; o += N / 2, i += S)
+			DitBwd<split(N / 2), N / 2, 2 * S, TYPE>::bwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 2; k0 < N / 2; ++k0, ++k1)
 			bwd2(out + k0, out + k1, out[k0], z[k0 * S] * out[k1]);
 	}
@@ -298,10 +287,8 @@ struct DitBwd<3, N, S, TYPE>
 {
 	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitBwd<split(N / 3), N / 3, 3 * S, TYPE> dit;
-		dit::bwd(out, in, z);
-		dit::bwd(out + N / 3, in + S, z);
-		dit::bwd(out + 2 * N / 3, in + 2 * S, z);
+		for (int o = 0, i = 0; o < N; o += N / 3, i += S)
+			DitBwd<split(N / 3), N / 3, 3 * S, TYPE>::bwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 3, k2 = 2 * N / 3; k0 < N / 3; ++k0, ++k1, ++k2)
 			bwd3(out + k0, out + k1, out + k2,
 				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2]);
@@ -313,11 +300,8 @@ struct DitBwd<4, N, S, TYPE>
 {
 	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitBwd<split(N / 4), N / 4, 4 * S, TYPE> dit;
-		dit::bwd(out, in, z);
-		dit::bwd(out + N / 4, in + S, z);
-		dit::bwd(out + 2 * N / 4, in + 2 * S, z);
-		dit::bwd(out + 3 * N / 4, in + 3 * S, z);
+		for (int o = 0, i = 0; o < N; o += N / 4, i += S)
+			DitBwd<split(N / 4), N / 4, 4 * S, TYPE>::bwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4;
 				k0 < N / 4; ++k0, ++k1, ++k2, ++k3)
 			bwd4(out + k0, out + k1, out + k2, out + k3,
@@ -331,12 +315,8 @@ struct DitBwd<5, N, S, TYPE>
 {
 	static void bwd(TYPE *out, TYPE *in, TYPE *z)
 	{
-		typedef DitBwd<split(N / 5), N / 5, 5 * S, TYPE> dit;
-		dit::bwd(out, in, z);
-		dit::bwd(out + N / 5, in + S, z);
-		dit::bwd(out + 2 * N / 5, in + 2 * S, z);
-		dit::bwd(out + 3 * N / 5, in + 3 * S, z);
-		dit::bwd(out + 4 * N / 5, in + 4 * S, z);
+		for (int o = 0, i = 0; o < N; o += N / 5, i += S)
+			DitBwd<split(N / 5), N / 5, 5 * S, TYPE>::bwd(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 5, k2 = 2 * N / 5, k3 = 3 * N / 5, k4 = 4 * N / 5;
 				k0 < N / 5; ++k0, ++k1, ++k2, ++k3, ++k4)
 			bwd5(out + k0, out + k1, out + k2, out + k3, out + k4,
