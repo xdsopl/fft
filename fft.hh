@@ -211,7 +211,7 @@ struct Dit<4, N, S, TYPE, SIGN>
 	static void dit(TYPE *out, TYPE *in, TYPE *z)
 	{
 		for (int o = 0, i = 0; o < N; o += N / 4, i += S)
-			Dit<split(N / 4), N / 4, 4 * S, TYPE, SING>::dit(out + o, in + i, z);
+			Dit<split(N / 4), N / 4, 4 * S, TYPE, SIGN>::dit(out + o, in + i, z);
 		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4;
 				k0 < N / 4; ++k0, ++k1, ++k2, ++k3)
 			Dit<4, 4, S, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3,
