@@ -12,43 +12,50 @@ N = 2^i * 3^j * 5^k
 # make test
 clang++ -stdlib=libc++ -std=c++11 -W -Wall -O3 -march=native benchmark.cc -o benchmark
 ./benchmark > /dev/null
-FFT size: 1 max error: 0
-FFT size: 2 max error: 1.57009e-16
-FFT size: 3 max error: 1.57009e-16
-FFT size: 4 max error: 1.57009e-16
-FFT size: 5 max error: 4.96507e-16
-FFT size: 6 max error: 2.48253e-16
-FFT size: 8 max error: 2.48253e-16
-FFT size: 9 max error: 4.00297e-16
-FFT size: 10 max error: 2.77556e-16
-FFT size: 12 max error: 4.96507e-16
-FFT size: 15 max error: 7.02167e-16
-FFT size: 16 max error: 3.33067e-16
-FFT size: 18 max error: 5.55112e-16
-FFT size: 20 max error: 4.71845e-16
-FFT size: 24 max error: 3.51083e-16
-FFT size: 25 max error: 3.51083e-16
-FFT size: 27 max error: 5.97873e-16
-FFT size: 30 max error: 7.55033e-16
-FFT size: 32 max error: 5.02866e-16
-FFT size: 36 max error: 5.97873e-16
-FFT size: 40 max error: 4.2367e-16
-FFT size: 45 max error: 4.57757e-16
-FFT size: 48 max error: 4.57757e-16
-FFT size: 50 max error: 7.26433e-16
-FFT size: 54 max error: 7.4476e-16
-FFT size: 60 max error: 6.75322e-16
-FFT size: 64 max error: 3.55445e-16
-FFT size: 72 max error: 5.90092e-16
-FFT size: 75 max error: 8.00593e-16
-FFT size: 80 max error: 4.57757e-16
-FFT size: 81 max error: 8.9509e-16
-FFT size: 90 max error: 6.75322e-16
-FFT size: 96 max error: 5.11788e-16
-FFT size: 100 max error: 8.88178e-16
-FFT size: 108 max error: 7.55033e-16
-FFT size: 120 max error: 1.20089e-15
-FFT size: 125 max error: 6.66134e-16
-FFT size: 128 max error: 5.66105e-16
-FFT size: 2700 max error after 10000 ffts: 6.44065e-12 speed: 44843 ffts / sec
+FFT size:    1 max error:           0 max error growth after 100000000 ffts:           0 speed: 100000000000 ffts / sec
+FFT size:    2 max error: 5.55112e-17 max error growth after  25000000 ffts: 5.55112e-17 speed:    409836065 ffts / sec
+FFT size:    3 max error: 2.00148e-16 max error growth after  12895092 ffts: 1.46554e-15 speed:    137181829 ffts / sec
+FFT size:    4 max error: 1.24127e-16 max error growth after   8333332 ffts: 1.24127e-16 speed:    231481444 ffts / sec
+FFT size:    5 max error: 1.24127e-16 max error growth after   6020598 ffts: 4.33556e-16 speed:    111492555 ffts / sec
+FFT size:    6 max error: 1.75542e-16 max error growth after   4649048 ffts: 2.77556e-16 speed:     83018714 ffts / sec
+FFT size:    8 max error: 3.14018e-16 max error growth after   3125000 ffts: 1.02358e-15 speed:     97656250 ffts / sec
+FFT size:    9 max error: 2.95046e-16 max error growth after   2664582 ffts: 2.23359e-13 speed:     42294952 ffts / sec
+FFT size:   10 max error: 4.71028e-16 max error growth after   2313782 ffts: 2.51478e-12 speed:     39216644 ffts / sec
+FFT size:   12 max error: 3.63548e-16 max error growth after   1817534 ffts: 8.58522e-11 speed:     38670936 ffts / sec
+FFT size:   15 max error: 4.47545e-16 max error growth after   1358632 ffts: 2.77373e-10 speed:     25159851 ffts / sec
+FFT size:   16 max error: 2.23773e-16 max error growth after   1250000 ffts: 3.51083e-16 speed:     36764705 ffts / sec
+FFT size:   18 max error: 3.51083e-16 max error growth after   1074590 ffts: 1.30391e-10 speed:     18213389 ffts / sec
+FFT size:   20 max error: 5.79553e-16 max error growth after    939508 ffts: 1.16756e-10 speed:     19989531 ffts / sec
+FFT size:   24 max error: 4.00297e-16 max error growth after    746050 ffts: 1.19632e-10 speed:     16218478 ffts / sec
+FFT size:   25 max error: 3.51083e-16 max error growth after    708734 ffts: 6.43203e-11 speed:     13629500 ffts / sec
+FFT size:   27 max error: 8.08255e-16 max error growth after    643574 ffts: 7.64873e-11 speed:     11096103 ffts / sec
+FFT size:   30 max error: 1.00535e-15 max error growth after    564312 ffts: 1.76578e-10 speed:      9564610 ffts / sec
+FFT size:   32 max error: 4.57757e-16 max error growth after    520832 ffts: 7.34836e-11 speed:     14467555 ffts / sec
+FFT size:   36 max error: 5.97873e-16 max error growth after    450212 ffts: 9.76172e-11 speed:      8657923 ffts / sec
+FFT size:   40 max error: 4.04127e-16 max error growth after    395448 ffts: 4.51325e-11 speed:      8070367 ffts / sec
+FFT size:   45 max error: 6.66134e-16 max error growth after    342308 ffts: 5.86232e-11 speed:      5705133 ffts / sec
+FFT size:   48 max error: 4.48339e-16 max error growth after    316376 ffts: 4.52677e-11 speed:      7357581 ffts / sec
+FFT size:   50 max error: 7.79136e-16 max error growth after    301028 ffts: 6.14083e-11 speed:      4855290 ffts / sec
+FFT size:   54 max error: 8.45521e-16 max error growth after    274148 ffts: 8.73925e-11 speed:      4351555 ffts / sec
+FFT size:   60 max error: 1.00535e-15 max error growth after    241304 ffts:  8.7407e-11 speed:      4468592 ffts / sec
+FFT size:   64 max error: 3.47776e-16 max error growth after    223214 ffts: 1.87303e-11 speed:      6032810 ffts / sec
+FFT size:   72 max error: 5.66105e-16 max error growth after    193710 ffts: 3.64293e-11 speed:      3654905 ffts / sec
+FFT size:   75 max error: 5.97873e-16 max error growth after    184446 ffts: 4.39001e-11 speed:      3074100 ffts / sec
+FFT size:   80 max error: 5.55112e-16 max error growth after    170720 ffts: 2.80338e-11 speed:      3632340 ffts / sec
+FFT size:   81 max error:  9.2389e-16 max error growth after    168200 ffts: 6.25072e-11 speed:      2712903 ffts / sec
+FFT size:   90 max error: 8.00593e-16 max error growth after    148308 ffts: 5.01191e-11 speed:      2317312 ffts / sec
+FFT size:   96 max error: 5.79553e-16 max error growth after    137332 ffts: 2.55183e-11 speed:      3051822 ffts / sec
+FFT size:  100 max error: 1.19349e-15 max error growth after    130824 ffts: 6.88871e-11 speed:      2378618 ffts / sec
+FFT size:  108 max error:  7.1089e-16 max error growth after    119398 ffts: 3.54237e-11 speed:      2094701 ffts / sec
+FFT size:  120 max error: 1.24746e-15 max error growth after    105392 ffts:  5.4963e-11 speed:      1916218 ffts / sec
+FFT size:  125 max error: 8.40036e-16 max error growth after    100428 ffts: 3.41673e-11 speed:      1731517 ffts / sec
+FFT size:  128 max error: 6.75322e-16 max error growth after     97656 ffts: 2.05995e-11 speed:      2569894 ffts / sec
+FFT size:  480 max error: 1.22628e-15 max error growth after     21028 ffts: 1.04556e-11 speed:       396754 ffts / sec
+FFT size:  640 max error: 1.09344e-15 max error growth after     15136 ffts: 5.37946e-12 speed:       315333 ffts / sec
+FFT size:  720 max error: 1.40433e-15 max error growth after     13236 ffts: 8.01819e-12 speed:       236357 ffts / sec
+FFT size: 1024 max error: 9.82093e-16 max error growth after      8876 ffts: 3.37177e-12 speed:       216487 ffts / sec
+FFT size: 1080 max error: 1.22125e-15 max error growth after      8358 ffts:   4.193e-12 speed:       134806 ffts / sec
+FFT size: 1280 max error: 1.11022e-15 max error growth after      6900 ffts: 3.18184e-12 speed:       146808 ffts / sec
+FFT size: 1920 max error: 1.40543e-15 max error growth after      4374 ffts: 2.26033e-12 speed:        81000 ffts / sec
+FFT size: 4096 max error: 9.99201e-16 max error growth after      1878 ffts: 6.59316e-13 speed:        36823 ffts / sec
 
