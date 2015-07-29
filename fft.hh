@@ -187,8 +187,8 @@ struct Dit<2, N, S, TYPE, SIGN>
 	{
 		for (int o = 0, i = 0; o < N; o += N / 2, i += S)
 			Dit<split(N / 2), N / 2, 2 * S, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = N / 2; k0 < N / 2; ++k0, ++k1)
-			Dit<2, 2, S, TYPE, SIGN>::dft(out + k0, out + k1, out[k0], z[k0 * S] * out[k1]);
+		for (int k0 = 0, k1 = N / 2, l1 = 0; k0 < N / 2; ++k0, ++k1, l1 += S)
+			Dit<2, 2, S, TYPE, SIGN>::dft(out + k0, out + k1, out[k0], z[l1] * out[k1]);
 	}
 };
 
@@ -199,9 +199,13 @@ struct Dit<3, N, S, TYPE, SIGN>
 	{
 		for (int o = 0, i = 0; o < N; o += N / 3, i += S)
 			Dit<split(N / 3), N / 3, 3 * S, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = N / 3, k2 = 2 * N / 3; k0 < N / 3; ++k0, ++k1, ++k2)
+		for (int k0 = 0, k1 = N / 3, k2 = 2 * N / 3,
+				l1 = 0, l2 = 0;
+				k0 < N / 3;
+				++k0, ++k1, ++k2,
+				l1 += S, l2 += 2 * S)
 			Dit<3, 3, S, TYPE, SIGN>::dft(out + k0, out + k1, out + k2,
-				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2]);
+				out[k0], z[l1] * out[k1], z[l2] * out[k2]);
 	}
 };
 
@@ -212,11 +216,13 @@ struct Dit<4, N, S, TYPE, SIGN>
 	{
 		for (int o = 0, i = 0; o < N; o += N / 4, i += S)
 			Dit<split(N / 4), N / 4, 4 * S, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4;
-				k0 < N / 4; ++k0, ++k1, ++k2, ++k3)
+		for (int k0 = 0, k1 = N / 4, k2 = 2 * N / 4, k3 = 3 * N / 4,
+				l1 = 0, l2 = 0, l3 = 0;
+				k0 < N / 4;
+				++k0, ++k1, ++k2, ++k3,
+				l1 += S, l2 += 2 * S, l3 += 3 * S)
 			Dit<4, 4, S, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3,
-				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2],
-				z[3 * k0 * S] * out[k3]);
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3]);
 	}
 };
 
@@ -227,11 +233,13 @@ struct Dit<5, N, S, TYPE, SIGN>
 	{
 		for (int o = 0, i = 0; o < N; o += N / 5, i += S)
 			Dit<split(N / 5), N / 5, 5 * S, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = N / 5, k2 = 2 * N / 5, k3 = 3 * N / 5, k4 = 4 * N / 5;
-				k0 < N / 5; ++k0, ++k1, ++k2, ++k3, ++k4)
+		for (int k0 = 0, k1 = N / 5, k2 = 2 * N / 5, k3 = 3 * N / 5, k4 = 4 * N / 5,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0;
+				k0 < N / 5;
+				++k0, ++k1, ++k2, ++k3, ++k4,
+				l1 += S, l2 += 2 * S, l3 += 3 * S, l4 += 4 * S)
 			Dit<5, 5, S, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4,
-				out[k0], z[k0 * S] * out[k1], z[2 * k0 * S] * out[k2],
-				z[3 * k0 * S] * out[k3], z[4 * k0 * S] * out[k4]);
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4]);
 	}
 };
 
