@@ -41,7 +41,7 @@ static constexpr int pow4(int N)
 
 static constexpr int split(int N)
 {
-	return (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%2)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
+	return (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%4)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
 }
 
 template <int RADIX, int BINS, int STRIDE, typename TYPE, int SIGN>
