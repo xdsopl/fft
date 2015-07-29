@@ -53,7 +53,7 @@ static void test()
 	for (int i = 0; i < BINS; ++i)
 		max_error_growth = std::max(max_error_growth, abs(a[i] - c[i]));
 
-	std::cerr << "FFT size: " << std::setw(4) << BINS;
+	std::cerr << "FFT size: " << std::setw(5) << BINS;
 	std::cerr << " max error: " << std::setw(11) << max_error;
 	std::cerr << " max error growth after " << std::setw(9) << ffts << " ffts: " << std::setw(11) << max_error_growth;
 	std::cerr << " speed: " << std::setw(12) << (ffts * 1000LL) / std::max(1LL, msec.count()) << " ffts / sec" << std::endl;
@@ -67,52 +67,11 @@ int main()
 #else
 	typedef Complex<value_type> complex_type;
 #endif
-
-	test<1, complex_type>();
-	test<2, complex_type>();
-	test<3, complex_type>();
-	test<4, complex_type>();
-	test<5, complex_type>();
-	test<6, complex_type>();
-	test<8, complex_type>();
-	test<9, complex_type>();
-	test<10, complex_type>();
-	test<12, complex_type>();
-	test<15, complex_type>();
 	test<16, complex_type>();
-	test<18, complex_type>();
-	test<20, complex_type>();
-	test<24, complex_type>();
-	test<25, complex_type>();
-	test<27, complex_type>();
-	test<30, complex_type>();
-	test<32, complex_type>();
-	test<36, complex_type>();
-	test<40, complex_type>();
-	test<45, complex_type>();
-	test<48, complex_type>();
-	test<50, complex_type>();
-	test<54, complex_type>();
-	test<60, complex_type>();
 	test<64, complex_type>();
-	test<72, complex_type>();
-	test<75, complex_type>();
-	test<80, complex_type>();
-	test<81, complex_type>();
-	test<90, complex_type>();
-	test<96, complex_type>();
-	test<100, complex_type>();
-	test<108, complex_type>();
-	test<120, complex_type>();
-	test<125, complex_type>();
-	test<128, complex_type>();
-	test<480, complex_type>();
-	test<640, complex_type>();
-	test<720, complex_type>();
+	test<256, complex_type>();
 	test<1024, complex_type>();
-	test<1080, complex_type>();
-	test<1280, complex_type>();
-	test<1920, complex_type>();
 	test<4096, complex_type>();
+	test<16384, complex_type>();
 }
 

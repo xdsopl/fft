@@ -41,7 +41,11 @@ static constexpr int pow4(int N)
 
 static constexpr int split(int N)
 {
-	return (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%2)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
+#if 1
+	return (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%4)) ? 4 : (!(N%2)) ? 2 : 1;
+#else
+	return (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%4)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
+#endif
 }
 
 template <int RADIX, int BINS, int STRIDE, typename TYPE, int SIGN>
@@ -105,6 +109,15 @@ struct Dit<3, 3, STRIDE, TYPE, 1>
 template <int STRIDE, typename TYPE>
 struct Dit<4, 4, STRIDE, TYPE, -1>
 {
+	static inline void split(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
+			TYPE in0, TYPE in1, TYPE in2, TYPE in3)
+	{
+		TYPE a(in2 + in3), b(twiddle(in2, in3));
+		*out0 = in0 + a;
+		*out1 = in1 + b;
+		*out2 = in0 - a;
+		*out3 = in1 - b;
+	}
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3)
 	{
@@ -123,6 +136,15 @@ struct Dit<4, 4, STRIDE, TYPE, -1>
 template <int STRIDE, typename TYPE>
 struct Dit<4, 4, STRIDE, TYPE, 1>
 {
+	static inline void split(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
+			TYPE in0, TYPE in1, TYPE in2, TYPE in3)
+	{
+		TYPE a(in2 + in3), b(twiddle(in2, in3));
+		*out0 = in0 + a;
+		*out1 = in1 - b;
+		*out2 = in0 - a;
+		*out3 = in1 + b;
+	}
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3)
 	{
@@ -217,6 +239,18 @@ struct Dit<4, BINS, STRIDE, TYPE, SIGN>
 	static const int RADIX = 4;
 	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
 	{
+#if 1
+		Dit<split(BINS / 2), BINS / 2, 2 * STRIDE, TYPE, SIGN>::dit(out, in, z);
+		for (int o = BINS / 2, i = STRIDE; o < BINS; o += BINS / RADIX, i += 2 * STRIDE)
+			Dit<split(BINS / RADIX), BINS / RADIX, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = BINS / RADIX, k2 = 2 * BINS / RADIX, k3 = 3 * BINS / RADIX,
+				l1 = 0, l3 = 0;
+				k0 < BINS / RADIX;
+				++k0, ++k1, ++k2, ++k3,
+				l1 += STRIDE, l3 += 3 * STRIDE)
+			Dit<4, 4, STRIDE, TYPE, SIGN>::split(out + k0, out + k1, out + k2, out + k3,
+				out[k0], out[k1], z[l1] * out[k2], z[l3] * out[k3]);
+#else
 		for (int o = 0, i = 0; o < BINS; o += BINS / RADIX, i += STRIDE)
 			Dit<split(BINS / RADIX), BINS / RADIX, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
 		for (int k0 = 0, k1 = BINS / RADIX, k2 = 2 * BINS / RADIX, k3 = 3 * BINS / RADIX,
@@ -226,6 +260,7 @@ struct Dit<4, BINS, STRIDE, TYPE, SIGN>
 				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE)
 			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3,
 				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3]);
+#endif
 	}
 };
 
