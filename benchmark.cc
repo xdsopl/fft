@@ -6,6 +6,7 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 */
 
 #include <iostream>
+#include <iomanip>
 #include <random>
 #include <complex>
 #include "complex.hh"
@@ -37,94 +38,81 @@ static void test()
 	for (int i = 0; i < BINS; ++i)
 		max_error = std::max(max_error, abs(a[i] - c[i]));
 
-	std::cerr << "FFT size: " << BINS << " max error: " << max_error << std::endl;
+	int ffts = ~1 & (int)(100000000 / BINS / (log2(BINS) + 1));
+	auto start = std::chrono::system_clock::now();
+	for (int i = 0; i < ffts; i += 2) {
+		fwd(b, c);
+		norm(b);
+		bwd(c, b);
+		norm(c);
+	}
+	auto end = std::chrono::system_clock::now();
+	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+	value_type max_error_growth = 0;
+	for (int i = 0; i < BINS; ++i)
+		max_error_growth = std::max(max_error_growth, abs(a[i] - c[i]));
+
+	std::cerr << "FFT size: " << std::setw(4) << BINS;
+	std::cerr << " max error: " << std::setw(11) << max_error;
+	std::cerr << " max error growth after " << std::setw(9) << ffts << " ffts: " << std::setw(11) << max_error_growth;
+	std::cerr << " speed: " << std::setw(12) << (ffts * 1000LL) / std::max(1LL, msec.count()) << " ffts / sec" << std::endl;
 }
 
 int main()
 {
-	typedef double type;
+	typedef double value_type;
 #if 0
-	typedef std::complex<type> complex;
+	typedef std::complex<value_type> complex_type;
 #else
-	typedef Complex<type> complex;
+	typedef Complex<value_type> complex_type;
 #endif
 
-	test<1, complex>();
-	test<2, complex>();
-	test<3, complex>();
-	test<4, complex>();
-	test<5, complex>();
-	test<6, complex>();
-	test<8, complex>();
-	test<9, complex>();
-	test<10, complex>();
-	test<12, complex>();
-	test<15, complex>();
-	test<16, complex>();
-	test<18, complex>();
-	test<20, complex>();
-	test<24, complex>();
-	test<25, complex>();
-	test<27, complex>();
-	test<30, complex>();
-	test<32, complex>();
-	test<36, complex>();
-	test<40, complex>();
-	test<45, complex>();
-	test<48, complex>();
-	test<50, complex>();
-	test<54, complex>();
-	test<60, complex>();
-	test<64, complex>();
-	test<72, complex>();
-	test<75, complex>();
-	test<80, complex>();
-	test<81, complex>();
-	test<90, complex>();
-	test<96, complex>();
-	test<100, complex>();
-	test<108, complex>();
-	test<120, complex>();
-	test<125, complex>();
-	test<128, complex>();
-
-	std::random_device rd;
-	std::default_random_engine generator(rd());
-	std::uniform_real_distribution<type> noise_distribution(-1.0f, 1.0f);
-	auto noise = std::bind(noise_distribution, generator);
-
-	const int bins = 2700;
-	const int ffts = 10000;
-
-	complex a[bins], b[bins], c[bins];
-	for (int i = 0; i < bins; ++i)
-		a[i] = complex(noise(), noise());
-
-	FFT::Normalize<bins, complex> norm;
-	FFT::Backward<bins, complex> bwd;
-	FFT::Forward<bins, complex> fwd;
-
-	auto start = std::chrono::system_clock::now();
-	fwd(b, a);
-	norm(b);
-	for (int i = 2; i < ffts; i += 2) {
-		bwd(c, b);
-		norm(c);
-		fwd(b, c);
-		norm(b);
-	}
-	bwd(c, b);
-	norm(c);
-	auto end = std::chrono::system_clock::now();
-	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
-
-	type max_error = 0;
-	for (int i = 0; i < bins; ++i)
-		max_error = std::max(max_error, abs(a[i] - c[i]));
-
-	std::cerr << "FFT size: " << bins << " max error after " << ffts << " ffts: " << max_error;
-	std::cerr << " speed: " << (ffts * 1000LL) / std::max(1LL, msec.count()) << " ffts / sec" << std::endl;
-	//for (int i = 0; i < bins; ++i)
-	//	std::cout << a[i].real() << " " << a[i].imag() << " " << c[i].real() << " " << c[i].imag() << std::endl;
+	test<1, complex_type>();
+	test<2, complex_type>();
+	test<3, complex_type>();
+	test<4, complex_type>();
+	test<5, complex_type>();
+	test<6, complex_type>();
+	test<8, complex_type>();
+	test<9, complex_type>();
+	test<10, complex_type>();
+	test<12, complex_type>();
+	test<15, complex_type>();
+	test<16, complex_type>();
+	test<18, complex_type>();
+	test<20, complex_type>();
+	test<24, complex_type>();
+	test<25, complex_type>();
+	test<27, complex_type>();
+	test<30, complex_type>();
+	test<32, complex_type>();
+	test<36, complex_type>();
+	test<40, complex_type>();
+	test<45, complex_type>();
+	test<48, complex_type>();
+	test<50, complex_type>();
+	test<54, complex_type>();
+	test<60, complex_type>();
+	test<64, complex_type>();
+	test<72, complex_type>();
+	test<75, complex_type>();
+	test<80, complex_type>();
+	test<81, complex_type>();
+	test<90, complex_type>();
+	test<96, complex_type>();
+	test<100, complex_type>();
+	test<108, complex_type>();
+	test<120, complex_type>();
+	test<125, complex_type>();
+	test<128, complex_type>();
+	test<480, complex_type>();
+	test<640, complex_type>();
+	test<720, complex_type>();
+	test<1024, complex_type>();
+	test<1080, complex_type>();
+	test<1280, complex_type>();
+	test<1920, complex_type>();
+	test<4096, complex_type>();
 }
 
