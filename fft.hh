@@ -248,14 +248,19 @@ struct Dit<5, BINS, STRIDE, TYPE, SIGN>
 };
 
 template <int BINS, typename TYPE, int SIGN>
-struct Factors
+class Factors
 {
-	typedef typename TYPE::value_type value_type;
 	TYPE z[BINS];
+public:
+	typedef typename TYPE::value_type value_type;
 	Factors()
 	{
 		for (int n = 0; n < BINS; ++n)
 			z[n] = exp(TYPE(0, value_type(SIGN * 2 * M_PI) * value_type(n) / value_type(BINS)));
+	}
+	inline operator const TYPE * () const
+	{
+		return z;
 	}
 };
 
@@ -267,7 +272,7 @@ public:
 	typedef typename TYPE::value_type value_type;
 	inline void operator ()(TYPE *out, const TYPE *in)
 	{
-		Dit<split(BINS), BINS, 1, TYPE, -1>::dit(out, in, factors.z);
+		Dit<split(BINS), BINS, 1, TYPE, -1>::dit(out, in, factors);
 	}
 };
 
@@ -279,7 +284,7 @@ public:
 	typedef typename TYPE::value_type value_type;
 	inline void operator ()(TYPE *out, const TYPE *in)
 	{
-		Dit<split(BINS), BINS, 1, TYPE, 1>::dit(out, in, factors.z);
+		Dit<split(BINS), BINS, 1, TYPE, 1>::dit(out, in, factors);
 	}
 };
 
