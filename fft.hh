@@ -50,7 +50,7 @@ struct Dit {};
 template <int S, typename TYPE, int SIGN>
 struct Dit<1, 1, S, TYPE, SIGN>
 {
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		*out = *in;
 	}
@@ -64,7 +64,7 @@ struct Dit<2, 2, S, TYPE, SIGN>
 		*out0 = in0 + in1;
 		*out1 = in0 - in1;
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, in[0], in[S]);
 	}
@@ -80,7 +80,7 @@ struct Dit<3, 3, S, TYPE, -1>
 		*out1 = in0 - half(a + b);
 		*out2 = in0 - half(a - b);
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, in[0], in[S], in[2 * S]);
 	}
@@ -96,7 +96,7 @@ struct Dit<3, 3, S, TYPE, 1>
 		*out1 = in0 - half(a - b);
 		*out2 = in0 - half(a + b);
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, in[0], in[S], in[2 * S]);
 	}
@@ -114,7 +114,7 @@ struct Dit<4, 4, S, TYPE, -1>
 		*out2 = a - c;
 		*out3 = b - d;
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, out + 3, in[0], in[S], in[2 * S], in[3 * S]);
 	}
@@ -132,7 +132,7 @@ struct Dit<4, 4, S, TYPE, 1>
 		*out2 = a - c;
 		*out3 = b + d;
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, out + 3, in[0], in[S], in[2 * S], in[3 * S]);
 	}
@@ -153,7 +153,7 @@ struct Dit<5, 5, S, TYPE, -1>
 		*out3 = in0 + c2a + c1b - s2c + s1d;
 		*out4 = in0 + c1a + c2b - s1c - s2d;
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, in[0], in[S], in[2 * S], in[3 * S], in[4 * S]);
 	}
@@ -174,7 +174,7 @@ struct Dit<5, 5, S, TYPE, 1>
 		*out3 = in0 + c2a + c1b + s2c - s1d;
 		*out4 = in0 + c1a + c2b + s1c + s2d;
 	}
-	static inline void dit(TYPE *out, TYPE *in, TYPE *)
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, in[0], in[S], in[2 * S], in[3 * S], in[4 * S]);
 	}
@@ -183,7 +183,7 @@ struct Dit<5, 5, S, TYPE, 1>
 template <int N, int S, typename TYPE, int SIGN>
 struct Dit<2, N, S, TYPE, SIGN>
 {
-	static void dit(TYPE *out, TYPE *in, TYPE *z)
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
 	{
 		for (int o = 0, i = 0; o < N; o += N / 2, i += S)
 			Dit<split(N / 2), N / 2, 2 * S, TYPE, SIGN>::dit(out + o, in + i, z);
@@ -195,7 +195,7 @@ struct Dit<2, N, S, TYPE, SIGN>
 template <int N, int S, typename TYPE, int SIGN>
 struct Dit<3, N, S, TYPE, SIGN>
 {
-	static void dit(TYPE *out, TYPE *in, TYPE *z)
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
 	{
 		for (int o = 0, i = 0; o < N; o += N / 3, i += S)
 			Dit<split(N / 3), N / 3, 3 * S, TYPE, SIGN>::dit(out + o, in + i, z);
@@ -208,7 +208,7 @@ struct Dit<3, N, S, TYPE, SIGN>
 template <int N, int S, typename TYPE, int SIGN>
 struct Dit<4, N, S, TYPE, SIGN>
 {
-	static void dit(TYPE *out, TYPE *in, TYPE *z)
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
 	{
 		for (int o = 0, i = 0; o < N; o += N / 4, i += S)
 			Dit<split(N / 4), N / 4, 4 * S, TYPE, SIGN>::dit(out + o, in + i, z);
@@ -223,7 +223,7 @@ struct Dit<4, N, S, TYPE, SIGN>
 template <int N, int S, typename TYPE, int SIGN>
 struct Dit<5, N, S, TYPE, SIGN>
 {
-	static void dit(TYPE *out, TYPE *in, TYPE *z)
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
 	{
 		for (int o = 0, i = 0; o < N; o += N / 5, i += S)
 			Dit<split(N / 5), N / 5, 5 * S, TYPE, SIGN>::dit(out + o, in + i, z);
@@ -253,7 +253,7 @@ class Forward
 	Factors<BINS, TYPE, -1> factors;
 public:
 	typedef typename TYPE::value_type value_type;
-	inline void operator ()(TYPE *out, TYPE *in)
+	inline void operator ()(TYPE *out, const TYPE *in)
 	{
 		Dit<split(BINS), BINS, 1, TYPE, -1>::dit(out, in, factors.z);
 	}
@@ -265,7 +265,7 @@ class Backward
 	Factors<BINS, TYPE, 1> factors;
 public:
 	typedef typename TYPE::value_type value_type;
-	inline void operator ()(TYPE *out, TYPE *in)
+	inline void operator ()(TYPE *out, const TYPE *in)
 	{
 		Dit<split(BINS), BINS, 1, TYPE, 1>::dit(out, in, factors.z);
 	}
