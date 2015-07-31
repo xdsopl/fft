@@ -18,11 +18,19 @@ public:
 	Complex(T r, T i) : re(r), im(i) {}
 	inline T &real() { return re; }
 	inline T &imag() { return im; }
+	inline Complex<T> operator = (T a)
+	{
+		real() = a;
+		imag() = 0;
+		return *this;
+	}
+	inline Complex<T> operator += (Complex<T> a)
+	{
+		return *this = a + *this;
+	}
 	inline Complex<T> operator *= (T a)
 	{
-		real() *= a;
-		imag() *= a;
-		return *this;
+		return *this = a * *this;
 	}
 };
 
