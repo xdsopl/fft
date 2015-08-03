@@ -10,6 +10,7 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 #include <random>
 #include <complex>
 #include "complex.hh"
+#include <fftw3.h>
 #include "fft.hh"
 
 template <int BINS, typename TYPE>
@@ -22,16 +23,18 @@ static void test()
 	auto noise = std::bind(noise_distribution, generator);
 
 	TYPE a[BINS], b[BINS], c[BINS];
+	fftw_plan fwd_ba = fftw_plan_dft_1d(BINS, reinterpret_cast<fftw_complex *>(a), reinterpret_cast<fftw_complex *>(b), FFTW_FORWARD, FFTW_ESTIMATE|FFTW_PRESERVE_INPUT);
+	fftw_plan bwd_cb = fftw_plan_dft_1d(BINS, reinterpret_cast<fftw_complex *>(b), reinterpret_cast<fftw_complex *>(c), FFTW_BACKWARD, FFTW_ESTIMATE|FFTW_PRESERVE_INPUT);
+	fftw_plan fwd_bc = fftw_plan_dft_1d(BINS, reinterpret_cast<fftw_complex *>(c), reinterpret_cast<fftw_complex *>(b), FFTW_FORWARD, FFTW_ESTIMATE|FFTW_PRESERVE_INPUT);
+
 	for (int i = 0; i < BINS; ++i)
 		a[i] = TYPE(noise(), noise());
 
 	FFT::Normalize<BINS, TYPE> norm;
-	FFT::Backward<BINS, TYPE> bwd;
-	FFT::Forward<BINS, TYPE> fwd;
 
-	fwd(b, a);
+	fftw_execute(fwd_ba);
 	norm(b);
-	bwd(c, b);
+	fftw_execute(bwd_cb);
 	norm(c);
 
 	value_type max_error = 0;
@@ -41,13 +44,17 @@ static void test()
 	int ffts = ~1 & (int)(100000000 / BINS / (log2(BINS) + 1));
 	auto start = std::chrono::system_clock::now();
 	for (int i = 0; i < ffts; i += 2) {
-		fwd(b, c);
+		fftw_execute(fwd_bc);
 		norm(b);
-		bwd(c, b);
+		fftw_execute(bwd_cb);
 		norm(c);
 	}
 	auto end = std::chrono::system_clock::now();
 	auto msec = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
+
+	fftw_destroy_plan(fwd_ba);
+	fftw_destroy_plan(bwd_cb);
+	fftw_destroy_plan(fwd_bc);
 
 	value_type max_error_growth = 0;
 	for (int i = 0; i < BINS; ++i)
