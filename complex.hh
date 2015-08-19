@@ -28,9 +28,17 @@ public:
 	{
 		return *this = a + *this;
 	}
+	inline Complex<T> operator *= (Complex<T> a)
+	{
+		return *this = a * *this;
+	}
 	inline Complex<T> operator *= (T a)
 	{
 		return *this = a * *this;
+	}
+	inline Complex<T> operator /= (T a)
+	{
+		return *this = *this / a;
 	}
 };
 
@@ -50,6 +58,12 @@ template <typename T>
 static inline Complex<T> operator * (T a, Complex<T> b)
 {
 	return Complex<T>(a * b.real(), a * b.imag());
+}
+
+template <typename T>
+static inline Complex<T> operator / (Complex<T> a, T b)
+{
+	return Complex<T>(a.real() / b, a.imag() / b);
 }
 
 template <typename T>
