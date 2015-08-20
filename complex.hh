@@ -73,6 +73,13 @@ static inline Complex<T> operator * (Complex<T> a, Complex<T> b)
 }
 
 template <typename T>
+static inline Complex<T> operator / (Complex<T> a, Complex<T> b)
+{
+	return Complex<T>((a.real() * b.real() + a.imag() * b.imag()) / (b.real() * b.real() + b.imag() * b.imag()),
+			(a.imag() * b.real() - a.real() * b.imag()) / (b.real() * b.real() + b.imag() * b.imag()));
+}
+
+template <typename T>
 static inline Complex<T> exp(Complex<T> a)
 {
 	return Complex<T>(exp(a.real()) * cos(a.imag()), exp(a.real()) * sin(a.imag()));
@@ -82,6 +89,12 @@ template <typename T>
 static inline T abs(Complex<T> a)
 {
 	return hypot(a.real(), a.imag());
+}
+
+template <typename T>
+static inline T arg(Complex<T> a)
+{
+	return atan2(a.imag(), a.real());
 }
 
 #endif
