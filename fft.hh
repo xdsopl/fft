@@ -157,8 +157,8 @@ struct Dit<5, 5, STRIDE, TYPE, -1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
 		TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-		TYPE c1a(cos2pi5(a)), c2b(cos4pi5(b)), s1c(sin2pi5(c)), s2d(sin4pi5(d));
-		TYPE c2a(cos4pi5(a)), c1b(cos2pi5(b)), s2c(sin4pi5(c)), s1d(sin2pi5(d));
+		TYPE c1a(cos2pi5(a)), c1b(cos2pi5(b)), s1c(sin2pi5(c)), s1d(sin2pi5(d));
+		TYPE c2a(cos4pi5(a)), c2b(cos4pi5(b)), s2c(sin4pi5(c)), s2d(sin4pi5(d));
 		*out0 = in0 + a + b;
 		*out1 = in0 + c1a + c2b + s1c + s2d;
 		*out2 = in0 + c2a + c1b + s2c - s1d;
@@ -178,8 +178,8 @@ struct Dit<5, 5, STRIDE, TYPE, 1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
 		TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-		TYPE c1a(cos2pi5(a)), c2b(cos4pi5(b)), s1c(sin2pi5(c)), s2d(sin4pi5(d));
-		TYPE c2a(cos4pi5(a)), c1b(cos2pi5(b)), s2c(sin4pi5(c)), s1d(sin2pi5(d));
+		TYPE c1a(cos2pi5(a)), c1b(cos2pi5(b)), s1c(sin2pi5(c)), s1d(sin2pi5(d));
+		TYPE c2a(cos4pi5(a)), c2b(cos4pi5(b)), s2c(sin4pi5(c)), s2d(sin4pi5(d));
 		*out0 = in0 + a + b;
 		*out1 = in0 + c1a + c2b - s1c - s2d;
 		*out2 = in0 + c2a + c1b - s2c + s1d;
