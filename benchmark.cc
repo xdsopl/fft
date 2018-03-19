@@ -121,7 +121,9 @@ int main()
 	test<125, complex_type>();
 	test<126, complex_type>();
 	test<128, complex_type>();
+	test<256, complex_type>();
 	test<480, complex_type>();
+	test<512, complex_type>();
 	test<640, complex_type>();
 	test<720, complex_type>();
 	test<882, complex_type>();
