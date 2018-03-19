@@ -36,6 +36,26 @@ template <typename TYPE>
 static inline TYPE cos6pi7(TYPE a) { return std::cos(typename TYPE::value_type(6 * M_PI / 7)) * a; }
 template <typename TYPE>
 static inline TYPE sin6pi7(TYPE a) { return std::sin(typename TYPE::value_type(6 * M_PI / 7)) * a; }
+template <typename TYPE>
+static inline TYPE cos2pi11(TYPE a) { return std::cos(typename TYPE::value_type(2 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE sin2pi11(TYPE a) { return std::sin(typename TYPE::value_type(2 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE cos4pi11(TYPE a) { return std::cos(typename TYPE::value_type(4 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE sin4pi11(TYPE a) { return std::sin(typename TYPE::value_type(4 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE cos6pi11(TYPE a) { return std::cos(typename TYPE::value_type(6 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE sin6pi11(TYPE a) { return std::sin(typename TYPE::value_type(6 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE cos8pi11(TYPE a) { return std::cos(typename TYPE::value_type(8 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE sin8pi11(TYPE a) { return std::sin(typename TYPE::value_type(8 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE cos10pi11(TYPE a) { return std::cos(typename TYPE::value_type(10 * M_PI / 11)) * a; }
+template <typename TYPE>
+static inline TYPE sin10pi11(TYPE a) { return std::sin(typename TYPE::value_type(10 * M_PI / 11)) * a; }
 
 template <typename TYPE>
 static inline TYPE fiddle(TYPE a, TYPE b)
@@ -66,7 +86,7 @@ static constexpr int pow8(int N)
 
 static constexpr int split(int N)
 {
-	return (!(N%7)) ? 7 : (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%8)&&pow8(N)) ? 8 : (!(N%4)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
+	return (!(N%11)) ? 11 : (!(N%7)) ? 7 : (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%8)&&pow8(N)) ? 8 : (!(N%4)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
 }
 
 template <int RADIX, int BINS, int STRIDE, typename TYPE, int SIGN>
@@ -301,6 +321,68 @@ struct Dit<8, 8, STRIDE, TYPE, 1>
 	}
 };
 
+template <int STRIDE, typename TYPE>
+struct Dit<11, 11, STRIDE, TYPE, -1>
+{
+	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10,
+			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
+	{
+		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6), f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
+		TYPE c1a(cos2pi11(a)), c1b(cos2pi11(b)), c1c(cos2pi11(c)), c1d(cos2pi11(d)), c1e(cos2pi11(e)), s1f(sin2pi11(f)), s1g(sin2pi11(g)), s1h(sin2pi11(h)), s1i(sin2pi11(i)), s1j(sin2pi11(j));
+		TYPE c2a(cos4pi11(a)), c2b(cos4pi11(b)), c2c(cos4pi11(c)), c2d(cos4pi11(d)), c2e(cos4pi11(e)), s2f(sin4pi11(f)), s2g(sin4pi11(g)), s2h(sin4pi11(h)), s2i(sin4pi11(i)), s2j(sin4pi11(j));
+		TYPE c3a(cos6pi11(a)), c3b(cos6pi11(b)), c3c(cos6pi11(c)), c3d(cos6pi11(d)), c3e(cos6pi11(e)), s3f(sin6pi11(f)), s3g(sin6pi11(g)), s3h(sin6pi11(h)), s3i(sin6pi11(i)), s3j(sin6pi11(j));
+		TYPE c4a(cos8pi11(a)), c4b(cos8pi11(b)), c4c(cos8pi11(c)), c4d(cos8pi11(d)), c4e(cos8pi11(e)), s4f(sin8pi11(f)), s4g(sin8pi11(g)), s4h(sin8pi11(h)), s4i(sin8pi11(i)), s4j(sin8pi11(j));
+		TYPE c5a(cos10pi11(a)), c5b(cos10pi11(b)), c5c(cos10pi11(c)), c5d(cos10pi11(d)), c5e(cos10pi11(e)), s5f(sin10pi11(f)), s5g(sin10pi11(g)), s5h(sin10pi11(h)), s5i(sin10pi11(i)), s5j(sin10pi11(j));
+
+		*out0 = in0 + a + b + c + d + e;
+		*out1 = in0 + c1a + c2b + c3c + c4d + c5e + s1f + s2g + s3h + s4i + s5j;
+		*out2 = in0 + c2a + c4b + c5c + c3d + c1e + s2f + s4g - s5h - s3i - s1j;
+		*out3 = in0 + c3a + c5b + c2c + c1d + c4e + s3f - s5g - s2h + s1i + s4j;
+		*out4 = in0 + c4a + c3b + c1c + c5d + c2e + s4f - s3g + s1h + s5i - s2j;
+		*out5 = in0 + c5a + c1b + c4c + c2d + c3e + s5f - s1g + s4h - s2i + s3j;
+		*out6 = in0 + c5a + c1b + c4c + c2d + c3e - s5f + s1g - s4h + s2i - s3j;
+		*out7 = in0 + c4a + c3b + c1c + c5d + c2e - s4f + s3g - s1h - s5i + s2j;
+		*out8 = in0 + c3a + c5b + c2c + c1d + c4e - s3f + s5g + s2h - s1i - s4j;
+		*out9 = in0 + c2a + c4b + c5c + c3d + c1e - s2f - s4g + s5h + s3i + s1j;
+		*out10= in0 + c1a + c2b + c3c + c4d + c5e - s1f - s2g - s3h - s4i - s5j;
+	}
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
+	{
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
+	}
+};
+
+template <int STRIDE, typename TYPE>
+struct Dit<11, 11, STRIDE, TYPE, 1>
+{
+	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10,
+			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
+	{
+		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6), f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
+		TYPE c1a(cos2pi11(a)), c1b(cos2pi11(b)), c1c(cos2pi11(c)), c1d(cos2pi11(d)), c1e(cos2pi11(e)), s1f(sin2pi11(f)), s1g(sin2pi11(g)), s1h(sin2pi11(h)), s1i(sin2pi11(i)), s1j(sin2pi11(j));
+		TYPE c2a(cos4pi11(a)), c2b(cos4pi11(b)), c2c(cos4pi11(c)), c2d(cos4pi11(d)), c2e(cos4pi11(e)), s2f(sin4pi11(f)), s2g(sin4pi11(g)), s2h(sin4pi11(h)), s2i(sin4pi11(i)), s2j(sin4pi11(j));
+		TYPE c3a(cos6pi11(a)), c3b(cos6pi11(b)), c3c(cos6pi11(c)), c3d(cos6pi11(d)), c3e(cos6pi11(e)), s3f(sin6pi11(f)), s3g(sin6pi11(g)), s3h(sin6pi11(h)), s3i(sin6pi11(i)), s3j(sin6pi11(j));
+		TYPE c4a(cos8pi11(a)), c4b(cos8pi11(b)), c4c(cos8pi11(c)), c4d(cos8pi11(d)), c4e(cos8pi11(e)), s4f(sin8pi11(f)), s4g(sin8pi11(g)), s4h(sin8pi11(h)), s4i(sin8pi11(i)), s4j(sin8pi11(j));
+		TYPE c5a(cos10pi11(a)), c5b(cos10pi11(b)), c5c(cos10pi11(c)), c5d(cos10pi11(d)), c5e(cos10pi11(e)), s5f(sin10pi11(f)), s5g(sin10pi11(g)), s5h(sin10pi11(h)), s5i(sin10pi11(i)), s5j(sin10pi11(j));
+
+		*out0 = in0 + a + b + c + d + e;
+		*out1 = in0 + c1a + c2b + c3c + c4d + c5e - s1f - s2g - s3h - s4i - s5j;
+		*out2 = in0 + c2a + c4b + c5c + c3d + c1e - s2f - s4g + s5h + s3i + s1j;
+		*out3 = in0 + c3a + c5b + c2c + c1d + c4e - s3f + s5g + s2h - s1i - s4j;
+		*out4 = in0 + c4a + c3b + c1c + c5d + c2e - s4f + s3g - s1h - s5i + s2j;
+		*out5 = in0 + c5a + c1b + c4c + c2d + c3e - s5f + s1g - s4h + s2i - s3j;
+		*out6 = in0 + c5a + c1b + c4c + c2d + c3e + s5f - s1g + s4h - s2i + s3j;
+		*out7 = in0 + c4a + c3b + c1c + c5d + c2e + s4f - s3g + s1h + s5i - s2j;
+		*out8 = in0 + c3a + c5b + c2c + c1d + c4e + s3f - s5g - s2h + s1i + s4j;
+		*out9 = in0 + c2a + c4b + c5c + c3d + c1e + s2f + s4g - s5h - s3i - s1j;
+		*out10= in0 + c1a + c2b + c3c + c4d + c5e + s1f + s2g + s3h + s4i + s5j;
+	}
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
+	{
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
+	}
+};
+
 template <int BINS, int STRIDE, typename TYPE, int SIGN>
 struct Dit<2, BINS, STRIDE, TYPE, SIGN>
 {
@@ -407,6 +489,25 @@ struct Dit<8, BINS, STRIDE, TYPE, SIGN>
 				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE)
 			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7,
 				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<11, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 11;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10]);
 	}
 };
 
