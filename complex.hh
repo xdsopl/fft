@@ -55,6 +55,12 @@ static inline Complex<T> operator - (Complex<T> a, Complex<T> b)
 }
 
 template <typename T>
+static inline Complex<T> operator - (Complex<T> a)
+{
+	return Complex<T>(-a.real(), -a.imag());
+}
+
+template <typename T>
 static inline Complex<T> operator * (T a, Complex<T> b)
 {
 	return Complex<T>(a * b.real(), a * b.imag());
