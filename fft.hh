@@ -120,10 +120,7 @@ struct Dit<3, 3, STRIDE, TYPE, -1>
 {
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE in0, TYPE in1, TYPE in2)
 	{
-		TYPE a(in1 + in2), b(sqrt3(twiddle(in2, in1)));
-		*out0 = in0 + a;
-		*out1 = in0 - half(a + b);
-		*out2 = in0 - half(a - b);
+		Dit<3, 3, STRIDE, TYPE, 1>::dft(out0, out2, out1, in0, in1, in2);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -153,12 +150,8 @@ struct Dit<4, 4, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3)
 	{
-		TYPE a(in0 + in2), b(in0 - in2);
-		TYPE c(in1 + in3), d(twiddle(in1, in3));
-		*out0 = a + c;
-		*out1 = b + d;
-		*out2 = a - c;
-		*out3 = b - d;
+		Dit<4, 4, STRIDE, TYPE, 1>::dft(out0, out3, out2, out1,
+			in0, in1, in2, in3);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -193,13 +186,8 @@ struct Dit<5, 5, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
-		TYPE ac(in1 + in4), as(twiddle(in1, in4));
-		TYPE bc(in2 + in3), bs(twiddle(in2, in3));
-		*out0 = in0 + ac + bc;
-		*out1 = in0 + cx<1,5>(ac) + sx<1,5>(as) + cx<2,5>(bc) + sx<2,5>(bs);
-		*out2 = in0 + cx<2,5>(ac) + sx<2,5>(as) + cx<1,5>(bc) - sx<1,5>(bs);
-		*out3 = in0 + cx<2,5>(ac) - sx<2,5>(as) + cx<1,5>(bc) + sx<1,5>(bs);
-		*out4 = in0 + cx<1,5>(ac) - sx<1,5>(as) + cx<2,5>(bc) - sx<2,5>(bs);
+		Dit<5, 5, STRIDE, TYPE, 1>::dft(out0, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -235,16 +223,8 @@ struct Dit<7, 7, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6)
 	{
-		TYPE ac(in1 + in6), as(twiddle(in1, in6));
-		TYPE bc(in2 + in5), bs(twiddle(in2, in5));
-		TYPE cc(in3 + in4), cs(twiddle(in3, in4));
-		*out0 = in0 + ac + bc + cc;
-		*out1 = in0 + cx<1,7>(ac) + sx<1,7>(as) + cx<2,7>(bc) + sx<2,7>(bs) + cx<3,7>(cc) + sx<3,7>(cs);
-		*out2 = in0 + cx<2,7>(ac) + sx<2,7>(as) + cx<3,7>(bc) - sx<3,7>(bs) + cx<1,7>(cc) - sx<1,7>(cs);
-		*out3 = in0 + cx<3,7>(ac) + sx<3,7>(as) + cx<1,7>(bc) - sx<1,7>(bs) + cx<2,7>(cc) + sx<2,7>(cs);
-		*out4 = in0 + cx<3,7>(ac) - sx<3,7>(as) + cx<1,7>(bc) + sx<1,7>(bs) + cx<2,7>(cc) - sx<2,7>(cs);
-		*out5 = in0 + cx<2,7>(ac) - sx<2,7>(as) + cx<3,7>(bc) + sx<3,7>(bs) + cx<1,7>(cc) + sx<1,7>(cs);
-		*out6 = in0 + cx<1,7>(ac) - sx<1,7>(as) + cx<2,7>(bc) - sx<2,7>(bs) + cx<3,7>(cc) - sx<3,7>(cs);
+		Dit<7, 7, STRIDE, TYPE, 1>::dft(out0, out6, out5, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4, in5, in6);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -283,20 +263,8 @@ struct Dit<8, 8, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7)
 	{
-		TYPE a(in0 + in4), b(in0 - in4);
-		TYPE c(in1 + in5), d(in1 - in5);
-		TYPE e(in2 + in6), f(twiddle(in2, in6));
-		TYPE g(in3 + in7), h(in3 - in7);
-		TYPE cpg(c + g), tcg(twiddle(c, g));
-		TYPE fdh(rsqrt2(fiddle(d, h))), fhd(rsqrt2(fiddle(h, d)));
-		*out0 = a + e + cpg;
-		*out1 = b + f + fdh;
-		*out2 = a - e + tcg;
-		*out3 = b - f + fhd;
-		*out4 = a + e - cpg;
-		*out5 = b + f - fdh;
-		*out6 = a - e - tcg;
-		*out7 = b - f - fhd;
+		Dit<8, 8, STRIDE, TYPE, 1>::dft(out0, out7, out6, out5, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4, in5, in6, in7);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -339,22 +307,8 @@ struct Dit<11, 11, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
 	{
-		TYPE ac(in1 + in10), as(twiddle(in1, in10));
-		TYPE bc(in2 + in9), bs(twiddle(in2, in9));
-		TYPE cc(in3 + in8), cs(twiddle(in3, in8));
-		TYPE dc(in4 + in7), ds(twiddle(in4, in7));
-		TYPE ec(in5 + in6), es(twiddle(in5, in6));
-		*out0 = in0 + ac + bc + cc + dc + ec;
-		*out1 = in0 + cx<1,11>(ac) + sx<1,11>(as) + cx<2,11>(bc) + sx<2,11>(bs) + cx<3,11>(cc) + sx<3,11>(cs) + cx<4,11>(dc) + sx<4,11>(ds) + cx<5,11>(ec) + sx<5,11>(es);
-		*out2 = in0 + cx<2,11>(ac) + sx<2,11>(as) + cx<4,11>(bc) + sx<4,11>(bs) + cx<5,11>(cc) - sx<5,11>(cs) + cx<3,11>(dc) - sx<3,11>(ds) + cx<1,11>(ec) - sx<1,11>(es);
-		*out3 = in0 + cx<3,11>(ac) + sx<3,11>(as) + cx<5,11>(bc) - sx<5,11>(bs) + cx<2,11>(cc) - sx<2,11>(cs) + cx<1,11>(dc) + sx<1,11>(ds) + cx<4,11>(ec) + sx<4,11>(es);
-		*out4 = in0 + cx<4,11>(ac) + sx<4,11>(as) + cx<3,11>(bc) - sx<3,11>(bs) + cx<1,11>(cc) + sx<1,11>(cs) + cx<5,11>(dc) + sx<5,11>(ds) + cx<2,11>(ec) - sx<2,11>(es);
-		*out5 = in0 + cx<5,11>(ac) + sx<5,11>(as) + cx<1,11>(bc) - sx<1,11>(bs) + cx<4,11>(cc) + sx<4,11>(cs) + cx<2,11>(dc) - sx<2,11>(ds) + cx<3,11>(ec) + sx<3,11>(es);
-		*out6 = in0 + cx<5,11>(ac) - sx<5,11>(as) + cx<1,11>(bc) + sx<1,11>(bs) + cx<4,11>(cc) - sx<4,11>(cs) + cx<2,11>(dc) + sx<2,11>(ds) + cx<3,11>(ec) - sx<3,11>(es);
-		*out7 = in0 + cx<4,11>(ac) - sx<4,11>(as) + cx<3,11>(bc) + sx<3,11>(bs) + cx<1,11>(cc) - sx<1,11>(cs) + cx<5,11>(dc) - sx<5,11>(ds) + cx<2,11>(ec) + sx<2,11>(es);
-		*out8 = in0 + cx<3,11>(ac) - sx<3,11>(as) + cx<5,11>(bc) + sx<5,11>(bs) + cx<2,11>(cc) + sx<2,11>(cs) + cx<1,11>(dc) - sx<1,11>(ds) + cx<4,11>(ec) - sx<4,11>(es);
-		*out9 = in0 + cx<2,11>(ac) - sx<2,11>(as) + cx<4,11>(bc) - sx<4,11>(bs) + cx<5,11>(cc) + sx<5,11>(cs) + cx<3,11>(dc) + sx<3,11>(ds) + cx<1,11>(ec) + sx<1,11>(es);
-		*out10= in0 + cx<1,11>(ac) - sx<1,11>(as) + cx<2,11>(bc) - sx<2,11>(bs) + cx<3,11>(cc) - sx<3,11>(cs) + cx<4,11>(dc) - sx<4,11>(ds) + cx<5,11>(ec) - sx<5,11>(es);
+		Dit<11, 11, STRIDE, TYPE, 1>::dft(out0, out10, out9, out8, out7, out6, out5, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4, in5, in6, in7, in8, in9, in10);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -399,25 +353,8 @@ struct Dit<13, 13, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10, TYPE *out11, TYPE *out12,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12)
 	{
-		TYPE ac(in1 + in12), as(twiddle(in1, in12));
-		TYPE bc(in2 + in11), bs(twiddle(in2, in11));
-		TYPE cc(in3 + in10), cs(twiddle(in3, in10));
-		TYPE dc(in4 + in9), ds(twiddle(in4, in9));
-		TYPE ec(in5 + in8), es(twiddle(in5, in8));
-		TYPE fc(in6 + in7), fs(twiddle(in6, in7));
-		*out0 = in0 + ac + bc + cc + dc + ec + fc;
-		*out1 = in0 + cx<1,13>(ac) + sx<1,13>(as) + cx<2,13>(bc) + sx<2,13>(bs) + cx<3,13>(cc) + sx<3,13>(cs) + cx<4,13>(dc) + sx<4,13>(ds) + cx<5,13>(ec) + sx<5,13>(es) + cx<6,13>(fc) + sx<6,13>(fs);
-		*out2 = in0 + cx<2,13>(ac) + sx<2,13>(as) + cx<4,13>(bc) + sx<4,13>(bs) + cx<6,13>(cc) + sx<6,13>(cs) + cx<5,13>(dc) - sx<5,13>(ds) + cx<3,13>(ec) - sx<3,13>(es) + cx<1,13>(fc) - sx<1,13>(fs);
-		*out3 = in0 + cx<3,13>(ac) + sx<3,13>(as) + cx<6,13>(bc) + sx<6,13>(bs) + cx<4,13>(cc) - sx<4,13>(cs) + cx<1,13>(dc) - sx<1,13>(ds) + cx<2,13>(ec) + sx<2,13>(es) + cx<5,13>(fc) + sx<5,13>(fs);
-		*out4 = in0 + cx<4,13>(ac) + sx<4,13>(as) + cx<5,13>(bc) - sx<5,13>(bs) + cx<1,13>(cc) - sx<1,13>(cs) + cx<3,13>(dc) + sx<3,13>(ds) + cx<6,13>(ec) - sx<6,13>(es) + cx<2,13>(fc) - sx<2,13>(fs);
-		*out5 = in0 + cx<5,13>(ac) + sx<5,13>(as) + cx<3,13>(bc) - sx<3,13>(bs) + cx<2,13>(cc) + sx<2,13>(cs) + cx<6,13>(dc) - sx<6,13>(ds) + cx<1,13>(ec) - sx<1,13>(es) + cx<4,13>(fc) + sx<4,13>(fs);
-		*out6 = in0 + cx<6,13>(ac) + sx<6,13>(as) + cx<1,13>(bc) - sx<1,13>(bs) + cx<5,13>(cc) + sx<5,13>(cs) + cx<2,13>(dc) - sx<2,13>(ds) + cx<4,13>(ec) + sx<4,13>(es) + cx<3,13>(fc) - sx<3,13>(fs);
-		*out7 = in0 + cx<6,13>(ac) - sx<6,13>(as) + cx<1,13>(bc) + sx<1,13>(bs) + cx<5,13>(cc) - sx<5,13>(cs) + cx<2,13>(dc) + sx<2,13>(ds) + cx<4,13>(ec) - sx<4,13>(es) + cx<3,13>(fc) + sx<3,13>(fs);
-		*out8 = in0 + cx<5,13>(ac) - sx<5,13>(as) + cx<3,13>(bc) + sx<3,13>(bs) + cx<2,13>(cc) - sx<2,13>(cs) + cx<6,13>(dc) + sx<6,13>(ds) + cx<1,13>(ec) + sx<1,13>(es) + cx<4,13>(fc) - sx<4,13>(fs);
-		*out9 = in0 + cx<4,13>(ac) - sx<4,13>(as) + cx<5,13>(bc) + sx<5,13>(bs) + cx<1,13>(cc) + sx<1,13>(cs) + cx<3,13>(dc) - sx<3,13>(ds) + cx<6,13>(ec) + sx<6,13>(es) + cx<2,13>(fc) + sx<2,13>(fs);
-		*out10= in0 + cx<3,13>(ac) - sx<3,13>(as) + cx<6,13>(bc) - sx<6,13>(bs) + cx<4,13>(cc) + sx<4,13>(cs) + cx<1,13>(dc) + sx<1,13>(ds) + cx<2,13>(ec) - sx<2,13>(es) + cx<5,13>(fc) - sx<5,13>(fs);
-		*out11= in0 + cx<2,13>(ac) - sx<2,13>(as) + cx<4,13>(bc) - sx<4,13>(bs) + cx<6,13>(cc) - sx<6,13>(cs) + cx<5,13>(dc) + sx<5,13>(ds) + cx<3,13>(ec) + sx<3,13>(es) + cx<1,13>(fc) + sx<1,13>(fs);
-		*out12= in0 + cx<1,13>(ac) - sx<1,13>(as) + cx<2,13>(bc) - sx<2,13>(bs) + cx<3,13>(cc) - sx<3,13>(cs) + cx<4,13>(dc) - sx<4,13>(ds) + cx<5,13>(ec) - sx<5,13>(es) + cx<6,13>(fc) - sx<6,13>(fs);
+		Dit<13, 13, STRIDE, TYPE, 1>::dft(out0, out12, out11, out10, out9, out8, out7, out6, out5, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -465,31 +402,8 @@ struct Dit<17, 17, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10, TYPE *out11, TYPE *out12, TYPE *out13, TYPE *out14, TYPE *out15, TYPE *out16,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12, TYPE in13, TYPE in14, TYPE in15, TYPE in16)
 	{
-		TYPE ac(in1 + in16), as(twiddle(in1, in16));
-		TYPE bc(in2 + in15), bs(twiddle(in2, in15));
-		TYPE cc(in3 + in14), cs(twiddle(in3, in14));
-		TYPE dc(in4 + in13), ds(twiddle(in4, in13));
-		TYPE ec(in5 + in12), es(twiddle(in5, in12));
-		TYPE fc(in6 + in11), fs(twiddle(in6, in11));
-		TYPE gc(in7 + in10), gs(twiddle(in7, in10));
-		TYPE hc(in8 + in9), hs(twiddle(in8, in9));
-		*out0 = in0 + ac + bc + cc + dc + ec + fc + gc + hc;
-		*out1 = in0 + cx<1,17>(ac) + sx<1,17>(as) + cx<2,17>(bc) + sx<2,17>(bs) + cx<3,17>(cc) + sx<3,17>(cs) + cx<4,17>(dc) + sx<4,17>(ds) + cx<5,17>(ec) + sx<5,17>(es) + cx<6,17>(fc) + sx<6,17>(fs) + cx<7,17>(gc) + sx<7,17>(gs) + cx<8,17>(hc) + sx<8,17>(hs);
-		*out2 = in0 + cx<2,17>(ac) + sx<2,17>(as) + cx<4,17>(bc) + sx<4,17>(bs) + cx<6,17>(cc) + sx<6,17>(cs) + cx<8,17>(dc) + sx<8,17>(ds) + cx<7,17>(ec) - sx<7,17>(es) + cx<5,17>(fc) - sx<5,17>(fs) + cx<3,17>(gc) - sx<3,17>(gs) + cx<1,17>(hc) - sx<1,17>(hs);
-		*out3 = in0 + cx<3,17>(ac) + sx<3,17>(as) + cx<6,17>(bc) + sx<6,17>(bs) + cx<8,17>(cc) - sx<8,17>(cs) + cx<5,17>(dc) - sx<5,17>(ds) + cx<2,17>(ec) - sx<2,17>(es) + cx<1,17>(fc) + sx<1,17>(fs) + cx<4,17>(gc) + sx<4,17>(gs) + cx<7,17>(hc) + sx<7,17>(hs);
-		*out4 = in0 + cx<4,17>(ac) + sx<4,17>(as) + cx<8,17>(bc) + sx<8,17>(bs) + cx<5,17>(cc) - sx<5,17>(cs) + cx<1,17>(dc) - sx<1,17>(ds) + cx<3,17>(ec) + sx<3,17>(es) + cx<7,17>(fc) + sx<7,17>(fs) + cx<6,17>(gc) - sx<6,17>(gs) + cx<2,17>(hc) - sx<2,17>(hs);
-		*out5 = in0 + cx<5,17>(ac) + sx<5,17>(as) + cx<7,17>(bc) - sx<7,17>(bs) + cx<2,17>(cc) - sx<2,17>(cs) + cx<3,17>(dc) + sx<3,17>(ds) + cx<8,17>(ec) + sx<8,17>(es) + cx<4,17>(fc) - sx<4,17>(fs) + cx<1,17>(gc) + sx<1,17>(gs) + cx<6,17>(hc) + sx<6,17>(hs);
-		*out6 = in0 + cx<6,17>(ac) + sx<6,17>(as) + cx<5,17>(bc) - sx<5,17>(bs) + cx<1,17>(cc) + sx<1,17>(cs) + cx<7,17>(dc) + sx<7,17>(ds) + cx<4,17>(ec) - sx<4,17>(es) + cx<2,17>(fc) + sx<2,17>(fs) + cx<8,17>(gc) + sx<8,17>(gs) + cx<3,17>(hc) - sx<3,17>(hs);
-		*out7 = in0 + cx<7,17>(ac) + sx<7,17>(as) + cx<3,17>(bc) - sx<3,17>(bs) + cx<4,17>(cc) + sx<4,17>(cs) + cx<6,17>(dc) - sx<6,17>(ds) + cx<1,17>(ec) + sx<1,17>(es) + cx<8,17>(fc) + sx<8,17>(fs) + cx<2,17>(gc) - sx<2,17>(gs) + cx<5,17>(hc) + sx<5,17>(hs);
-		*out8 = in0 + cx<8,17>(ac) + sx<8,17>(as) + cx<1,17>(bc) - sx<1,17>(bs) + cx<7,17>(cc) + sx<7,17>(cs) + cx<2,17>(dc) - sx<2,17>(ds) + cx<6,17>(ec) + sx<6,17>(es) + cx<3,17>(fc) - sx<3,17>(fs) + cx<5,17>(gc) + sx<5,17>(gs) + cx<4,17>(hc) - sx<4,17>(hs);
-		*out9 = in0 + cx<8,17>(ac) - sx<8,17>(as) + cx<1,17>(bc) + sx<1,17>(bs) + cx<7,17>(cc) - sx<7,17>(cs) + cx<2,17>(dc) + sx<2,17>(ds) + cx<6,17>(ec) - sx<6,17>(es) + cx<3,17>(fc) + sx<3,17>(fs) + cx<5,17>(gc) - sx<5,17>(gs) + cx<4,17>(hc) + sx<4,17>(hs);
-		*out10= in0 + cx<7,17>(ac) - sx<7,17>(as) + cx<3,17>(bc) + sx<3,17>(bs) + cx<4,17>(cc) - sx<4,17>(cs) + cx<6,17>(dc) + sx<6,17>(ds) + cx<1,17>(ec) - sx<1,17>(es) + cx<8,17>(fc) - sx<8,17>(fs) + cx<2,17>(gc) + sx<2,17>(gs) + cx<5,17>(hc) - sx<5,17>(hs);
-		*out11= in0 + cx<6,17>(ac) - sx<6,17>(as) + cx<5,17>(bc) + sx<5,17>(bs) + cx<1,17>(cc) - sx<1,17>(cs) + cx<7,17>(dc) - sx<7,17>(ds) + cx<4,17>(ec) + sx<4,17>(es) + cx<2,17>(fc) - sx<2,17>(fs) + cx<8,17>(gc) - sx<8,17>(gs) + cx<3,17>(hc) + sx<3,17>(hs);
-		*out12= in0 + cx<5,17>(ac) - sx<5,17>(as) + cx<7,17>(bc) + sx<7,17>(bs) + cx<2,17>(cc) + sx<2,17>(cs) + cx<3,17>(dc) - sx<3,17>(ds) + cx<8,17>(ec) - sx<8,17>(es) + cx<4,17>(fc) + sx<4,17>(fs) + cx<1,17>(gc) - sx<1,17>(gs) + cx<6,17>(hc) - sx<6,17>(hs);
-		*out13= in0 + cx<4,17>(ac) - sx<4,17>(as) + cx<8,17>(bc) - sx<8,17>(bs) + cx<5,17>(cc) + sx<5,17>(cs) + cx<1,17>(dc) + sx<1,17>(ds) + cx<3,17>(ec) - sx<3,17>(es) + cx<7,17>(fc) - sx<7,17>(fs) + cx<6,17>(gc) + sx<6,17>(gs) + cx<2,17>(hc) + sx<2,17>(hs);
-		*out14= in0 + cx<3,17>(ac) - sx<3,17>(as) + cx<6,17>(bc) - sx<6,17>(bs) + cx<8,17>(cc) + sx<8,17>(cs) + cx<5,17>(dc) + sx<5,17>(ds) + cx<2,17>(ec) + sx<2,17>(es) + cx<1,17>(fc) - sx<1,17>(fs) + cx<4,17>(gc) - sx<4,17>(gs) + cx<7,17>(hc) - sx<7,17>(hs);
-		*out15= in0 + cx<2,17>(ac) - sx<2,17>(as) + cx<4,17>(bc) - sx<4,17>(bs) + cx<6,17>(cc) - sx<6,17>(cs) + cx<8,17>(dc) - sx<8,17>(ds) + cx<7,17>(ec) + sx<7,17>(es) + cx<5,17>(fc) + sx<5,17>(fs) + cx<3,17>(gc) + sx<3,17>(gs) + cx<1,17>(hc) + sx<1,17>(hs);
-		*out16= in0 + cx<1,17>(ac) - sx<1,17>(as) + cx<2,17>(bc) - sx<2,17>(bs) + cx<3,17>(cc) - sx<3,17>(cs) + cx<4,17>(dc) - sx<4,17>(ds) + cx<5,17>(ec) - sx<5,17>(es) + cx<6,17>(fc) - sx<6,17>(fs) + cx<7,17>(gc) - sx<7,17>(gs) + cx<8,17>(hc) - sx<8,17>(hs);
+		Dit<17, 17, STRIDE, TYPE, 1>::dft(out0, out16, out15, out14, out13, out12, out11, out10, out9, out8, out7, out6, out5, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
