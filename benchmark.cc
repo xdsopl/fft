@@ -68,6 +68,7 @@ int main()
 	typedef Complex<value_type> complex_type;
 #endif
 
+#if 0
 	test<1, complex_type>();
 	test<2, complex_type>();
 	test<3, complex_type>();
@@ -152,5 +153,8 @@ int main()
 	test<1280, complex_type>();
 	test<1920, complex_type>();
 	test<4096, complex_type>();
+#else
+	test<91, complex_type>();
+#endif
 }
 
