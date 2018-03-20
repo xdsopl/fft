@@ -379,7 +379,7 @@ struct Dit<13, 13, STRIDE, TYPE, -1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12)
 	{
 		TYPE a(in1 + in12), b(in2 + in11), c(in3 + in10), d(in4 + in9), e(in5 + in8), f(in6 + in7), g(twiddle(in1, in12)), h(twiddle(in2, in11)), i(twiddle(in3, in10)), j(twiddle(in4, in9)), k(twiddle(in5, in8)), l(twiddle(in6, in7));
-		*out0 = in0 + in1 + in2 + in3 + in4 + in5 + in6 + in7 + in8 + in9 + in10 + in11 + in12;
+		*out0 = in0 + a + b + c + d + e + f;
 		*out1 = in0 + cx<1,13>(a) + cx<2,13>(b) + cx<3,13>(c) + cx<4,13>(d) + cx<5,13>(e) + cx<6,13>(f) + sx<1,13>(g) + sx<2,13>(h) + sx<3,13>(i) + sx<4,13>(j) + sx<5,13>(k) + sx<6,13>(l);
 		*out2 = in0 + ex<-2,13>(in1) + ex<-4,13>(in2) + ex<-6,13>(in3) + ex<-8,13>(in4) + ex<-10,13>(in5) + ex<-12,13>(in6) + ex<-1,13>(in7) + ex<-3,13>(in8) + ex<-5,13>(in9) + ex<-7,13>(in10) + ex<-9,13>(in11) + ex<-11,13>(in12);
 		*out3 = in0 + ex<-3,13>(in1) + ex<-6,13>(in2) + ex<-9,13>(in3) + ex<-12,13>(in4) + ex<-2,13>(in5) + ex<-5,13>(in6) + ex<-8,13>(in7) + ex<-11,13>(in8) + ex<-1,13>(in9) + ex<-4,13>(in10) + ex<-7,13>(in11) + ex<-10,13>(in12);
