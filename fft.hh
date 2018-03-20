@@ -178,14 +178,13 @@ struct Dit<5, 5, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
-		TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-		TYPE c1a(cx<1,5>(a)), c1b(cx<1,5>(b)), s1c(sx<1,5>(c)), s1d(sx<1,5>(d));
-		TYPE c2a(cx<2,5>(a)), c2b(cx<2,5>(b)), s2c(sx<2,5>(c)), s2d(sx<2,5>(d));
+		TYPE a(in1 + in4), b(in2 + in3);
+		TYPE c(twiddle(in1, in4)), d(twiddle(in2, in3));
 		*out0 = in0 + a + b;
-		*out1 = in0 + c1a + c2b + s1c + s2d;
-		*out2 = in0 + c2a + c1b + s2c - s1d;
-		*out3 = in0 + c2a + c1b - s2c + s1d;
-		*out4 = in0 + c1a + c2b - s1c - s2d;
+		*out1 = in0 + cx<1,5>(a) + cx<2,5>(b) + sx<1,5>(c) + sx<2,5>(d);
+		*out2 = in0 + cx<2,5>(a) + cx<1,5>(b) + sx<2,5>(c) - sx<1,5>(d);
+		*out3 = in0 + cx<2,5>(a) + cx<1,5>(b) - sx<2,5>(c) + sx<1,5>(d);
+		*out4 = in0 + cx<1,5>(a) + cx<2,5>(b) - sx<1,5>(c) - sx<2,5>(d);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -199,14 +198,13 @@ struct Dit<5, 5, STRIDE, TYPE, 1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
-		TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-		TYPE c1a(cx<1,5>(a)), c1b(cx<1,5>(b)), s1c(sx<1,5>(c)), s1d(sx<1,5>(d));
-		TYPE c2a(cx<2,5>(a)), c2b(cx<2,5>(b)), s2c(sx<2,5>(c)), s2d(sx<2,5>(d));
+		TYPE a(in1 + in4), b(in2 + in3);
+		TYPE c(twiddle(in1, in4)), d(twiddle(in2, in3));
 		*out0 = in0 + a + b;
-		*out1 = in0 + c1a + c2b - s1c - s2d;
-		*out2 = in0 + c2a + c1b - s2c + s1d;
-		*out3 = in0 + c2a + c1b + s2c - s1d;
-		*out4 = in0 + c1a + c2b + s1c + s2d;
+		*out1 = in0 + cx<1,5>(a) + cx<2,5>(b) - sx<1,5>(c) - sx<2,5>(d);
+		*out2 = in0 + cx<2,5>(a) + cx<1,5>(b) - sx<2,5>(c) + sx<1,5>(d);
+		*out3 = in0 + cx<2,5>(a) + cx<1,5>(b) + sx<2,5>(c) - sx<1,5>(d);
+		*out4 = in0 + cx<1,5>(a) + cx<2,5>(b) + sx<1,5>(c) + sx<2,5>(d);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -220,18 +218,15 @@ struct Dit<7, 7, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6)
 	{
-		TYPE a(in1 + in6), b(in2 + in5), c(in3 + in4), d(twiddle(in1, in6)), e(twiddle(in2, in5)), f(twiddle(in3, in4));
-		TYPE c1a(cx<1,7>(a)), c1b(cx<1,7>(b)), c1c(cx<1,7>(c)), s1d(sx<1,7>(d)), s1e(sx<1,7>(e)), s1f(sx<1,7>(f));
-		TYPE c2a(cx<2,7>(a)), c2b(cx<2,7>(b)), c2c(cx<2,7>(c)), s2d(sx<2,7>(d)), s2e(sx<2,7>(e)), s2f(sx<2,7>(f));
-		TYPE c3a(cx<3,7>(a)), c3b(cx<3,7>(b)), c3c(cx<3,7>(c)), s3d(sx<3,7>(d)), s3e(sx<3,7>(e)), s3f(sx<3,7>(f));
-
+		TYPE a(in1 + in6), b(in2 + in5), c(in3 + in4);
+		TYPE d(twiddle(in1, in6)), e(twiddle(in2, in5)), f(twiddle(in3, in4));
 		*out0 = in0 + a + b + c;
-		*out1 = in0 + c1a + c2b + c3c + s1d + s2e + s3f;
-		*out2 = in0 + c2a + c3b + c1c + s2d - s3e - s1f;
-		*out3 = in0 + c3a + c1b + c2c + s3d - s1e + s2f;
-		*out4 = in0 + c3a + c1b + c2c - s3d + s1e - s2f;
-		*out5 = in0 + c2a + c3b + c1c - s2d + s3e + s1f;
-		*out6 = in0 + c1a + c2b + c3c - s1d - s2e - s3f;
+		*out1 = in0 + cx<1,7>(a) + cx<2,7>(b) + cx<3,7>(c) + sx<1,7>(d) + sx<2,7>(e) + sx<3,7>(f);
+		*out2 = in0 + cx<2,7>(a) + cx<3,7>(b) + cx<1,7>(c) + sx<2,7>(d) - sx<3,7>(e) - sx<1,7>(f);
+		*out3 = in0 + cx<3,7>(a) + cx<1,7>(b) + cx<2,7>(c) + sx<3,7>(d) - sx<1,7>(e) + sx<2,7>(f);
+		*out4 = in0 + cx<3,7>(a) + cx<1,7>(b) + cx<2,7>(c) - sx<3,7>(d) + sx<1,7>(e) - sx<2,7>(f);
+		*out5 = in0 + cx<2,7>(a) + cx<3,7>(b) + cx<1,7>(c) - sx<2,7>(d) + sx<3,7>(e) + sx<1,7>(f);
+		*out6 = in0 + cx<1,7>(a) + cx<2,7>(b) + cx<3,7>(c) - sx<1,7>(d) - sx<2,7>(e) - sx<3,7>(f);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -245,18 +240,15 @@ struct Dit<7, 7, STRIDE, TYPE, 1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6)
 	{
-		TYPE a(in1 + in6), b(in2 + in5), c(in3 + in4), d(twiddle(in1, in6)), e(twiddle(in2, in5)), f(twiddle(in3, in4));
-		TYPE c1a(cx<1,7>(a)), c1b(cx<1,7>(b)), c1c(cx<1,7>(c)), s1d(sx<1,7>(d)), s1e(sx<1,7>(e)), s1f(sx<1,7>(f));
-		TYPE c2a(cx<2,7>(a)), c2b(cx<2,7>(b)), c2c(cx<2,7>(c)), s2d(sx<2,7>(d)), s2e(sx<2,7>(e)), s2f(sx<2,7>(f));
-		TYPE c3a(cx<3,7>(a)), c3b(cx<3,7>(b)), c3c(cx<3,7>(c)), s3d(sx<3,7>(d)), s3e(sx<3,7>(e)), s3f(sx<3,7>(f));
-
+		TYPE a(in1 + in6), b(in2 + in5), c(in3 + in4);
+		TYPE d(twiddle(in1, in6)), e(twiddle(in2, in5)), f(twiddle(in3, in4));
 		*out0 = in0 + a + b + c;
-		*out1 = in0 + c1a + c2b + c3c - s1d - s2e - s3f;
-		*out2 = in0 + c2a + c3b + c1c - s2d + s3e + s1f;
-		*out3 = in0 + c3a + c1b + c2c - s3d + s1e - s2f;
-		*out4 = in0 + c3a + c1b + c2c + s3d - s1e + s2f;
-		*out5 = in0 + c2a + c3b + c1c + s2d - s3e - s1f;
-		*out6 = in0 + c1a + c2b + c3c + s1d + s2e + s3f;
+		*out1 = in0 + cx<1,7>(a) + cx<2,7>(b) + cx<3,7>(c) - sx<1,7>(d) - sx<2,7>(e) - sx<3,7>(f);
+		*out2 = in0 + cx<2,7>(a) + cx<3,7>(b) + cx<1,7>(c) - sx<2,7>(d) + sx<3,7>(e) + sx<1,7>(f);
+		*out3 = in0 + cx<3,7>(a) + cx<1,7>(b) + cx<2,7>(c) - sx<3,7>(d) + sx<1,7>(e) - sx<2,7>(f);
+		*out4 = in0 + cx<3,7>(a) + cx<1,7>(b) + cx<2,7>(c) + sx<3,7>(d) - sx<1,7>(e) + sx<2,7>(f);
+		*out5 = in0 + cx<2,7>(a) + cx<3,7>(b) + cx<1,7>(c) + sx<2,7>(d) - sx<3,7>(e) - sx<1,7>(f);
+		*out6 = in0 + cx<1,7>(a) + cx<2,7>(b) + cx<3,7>(c) + sx<1,7>(d) + sx<2,7>(e) + sx<3,7>(f);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -316,24 +308,19 @@ struct Dit<11, 11, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
 	{
-		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6), f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
-		TYPE c1a(cx<1,11>(a)), c1b(cx<1,11>(b)), c1c(cx<1,11>(c)), c1d(cx<1,11>(d)), c1e(cx<1,11>(e)), s1f(sx<1,11>(f)), s1g(sx<1,11>(g)), s1h(sx<1,11>(h)), s1i(sx<1,11>(i)), s1j(sx<1,11>(j));
-		TYPE c2a(cx<2,11>(a)), c2b(cx<2,11>(b)), c2c(cx<2,11>(c)), c2d(cx<2,11>(d)), c2e(cx<2,11>(e)), s2f(sx<2,11>(f)), s2g(sx<2,11>(g)), s2h(sx<2,11>(h)), s2i(sx<2,11>(i)), s2j(sx<2,11>(j));
-		TYPE c3a(cx<3,11>(a)), c3b(cx<3,11>(b)), c3c(cx<3,11>(c)), c3d(cx<3,11>(d)), c3e(cx<3,11>(e)), s3f(sx<3,11>(f)), s3g(sx<3,11>(g)), s3h(sx<3,11>(h)), s3i(sx<3,11>(i)), s3j(sx<3,11>(j));
-		TYPE c4a(cx<4,11>(a)), c4b(cx<4,11>(b)), c4c(cx<4,11>(c)), c4d(cx<4,11>(d)), c4e(cx<4,11>(e)), s4f(sx<4,11>(f)), s4g(sx<4,11>(g)), s4h(sx<4,11>(h)), s4i(sx<4,11>(i)), s4j(sx<4,11>(j));
-		TYPE c5a(cx<5,11>(a)), c5b(cx<5,11>(b)), c5c(cx<5,11>(c)), c5d(cx<5,11>(d)), c5e(cx<5,11>(e)), s5f(sx<5,11>(f)), s5g(sx<5,11>(g)), s5h(sx<5,11>(h)), s5i(sx<5,11>(i)), s5j(sx<5,11>(j));
-
+		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6);
+		TYPE f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
 		*out0 = in0 + a + b + c + d + e;
-		*out1 = in0 + c1a + c2b + c3c + c4d + c5e + s1f + s2g + s3h + s4i + s5j;
-		*out2 = in0 + c2a + c4b + c5c + c3d + c1e + s2f + s4g - s5h - s3i - s1j;
-		*out3 = in0 + c3a + c5b + c2c + c1d + c4e + s3f - s5g - s2h + s1i + s4j;
-		*out4 = in0 + c4a + c3b + c1c + c5d + c2e + s4f - s3g + s1h + s5i - s2j;
-		*out5 = in0 + c5a + c1b + c4c + c2d + c3e + s5f - s1g + s4h - s2i + s3j;
-		*out6 = in0 + c5a + c1b + c4c + c2d + c3e - s5f + s1g - s4h + s2i - s3j;
-		*out7 = in0 + c4a + c3b + c1c + c5d + c2e - s4f + s3g - s1h - s5i + s2j;
-		*out8 = in0 + c3a + c5b + c2c + c1d + c4e - s3f + s5g + s2h - s1i - s4j;
-		*out9 = in0 + c2a + c4b + c5c + c3d + c1e - s2f - s4g + s5h + s3i + s1j;
-		*out10= in0 + c1a + c2b + c3c + c4d + c5e - s1f - s2g - s3h - s4i - s5j;
+		*out1 = in0 + cx<1,11>(a) + cx<2,11>(b) + cx<3,11>(c) + cx<4,11>(d) + cx<5,11>(e) + sx<1,11>(f) + sx<2,11>(g) + sx<3,11>(h) + sx<4,11>(i) + sx<5,11>(j);
+		*out2 = in0 + cx<2,11>(a) + cx<4,11>(b) + cx<5,11>(c) + cx<3,11>(d) + cx<1,11>(e) + sx<2,11>(f) + sx<4,11>(g) - sx<5,11>(h) - sx<3,11>(i) - sx<1,11>(j);
+		*out3 = in0 + cx<3,11>(a) + cx<5,11>(b) + cx<2,11>(c) + cx<1,11>(d) + cx<4,11>(e) + sx<3,11>(f) - sx<5,11>(g) - sx<2,11>(h) + sx<1,11>(i) + sx<4,11>(j);
+		*out4 = in0 + cx<4,11>(a) + cx<3,11>(b) + cx<1,11>(c) + cx<5,11>(d) + cx<2,11>(e) + sx<4,11>(f) - sx<3,11>(g) + sx<1,11>(h) + sx<5,11>(i) - sx<2,11>(j);
+		*out5 = in0 + cx<5,11>(a) + cx<1,11>(b) + cx<4,11>(c) + cx<2,11>(d) + cx<3,11>(e) + sx<5,11>(f) - sx<1,11>(g) + sx<4,11>(h) - sx<2,11>(i) + sx<3,11>(j);
+		*out6 = in0 + cx<5,11>(a) + cx<1,11>(b) + cx<4,11>(c) + cx<2,11>(d) + cx<3,11>(e) - sx<5,11>(f) + sx<1,11>(g) - sx<4,11>(h) + sx<2,11>(i) - sx<3,11>(j);
+		*out7 = in0 + cx<4,11>(a) + cx<3,11>(b) + cx<1,11>(c) + cx<5,11>(d) + cx<2,11>(e) - sx<4,11>(f) + sx<3,11>(g) - sx<1,11>(h) - sx<5,11>(i) + sx<2,11>(j);
+		*out8 = in0 + cx<3,11>(a) + cx<5,11>(b) + cx<2,11>(c) + cx<1,11>(d) + cx<4,11>(e) - sx<3,11>(f) + sx<5,11>(g) + sx<2,11>(h) - sx<1,11>(i) - sx<4,11>(j);
+		*out9 = in0 + cx<2,11>(a) + cx<4,11>(b) + cx<5,11>(c) + cx<3,11>(d) + cx<1,11>(e) - sx<2,11>(f) - sx<4,11>(g) + sx<5,11>(h) + sx<3,11>(i) + sx<1,11>(j);
+		*out10= in0 + cx<1,11>(a) + cx<2,11>(b) + cx<3,11>(c) + cx<4,11>(d) + cx<5,11>(e) - sx<1,11>(f) - sx<2,11>(g) - sx<3,11>(h) - sx<4,11>(i) - sx<5,11>(j);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -347,24 +334,19 @@ struct Dit<11, 11, STRIDE, TYPE, 1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
 	{
-		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6), f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
-		TYPE c1a(cx<1,11>(a)), c1b(cx<1,11>(b)), c1c(cx<1,11>(c)), c1d(cx<1,11>(d)), c1e(cx<1,11>(e)), s1f(sx<1,11>(f)), s1g(sx<1,11>(g)), s1h(sx<1,11>(h)), s1i(sx<1,11>(i)), s1j(sx<1,11>(j));
-		TYPE c2a(cx<2,11>(a)), c2b(cx<2,11>(b)), c2c(cx<2,11>(c)), c2d(cx<2,11>(d)), c2e(cx<2,11>(e)), s2f(sx<2,11>(f)), s2g(sx<2,11>(g)), s2h(sx<2,11>(h)), s2i(sx<2,11>(i)), s2j(sx<2,11>(j));
-		TYPE c3a(cx<3,11>(a)), c3b(cx<3,11>(b)), c3c(cx<3,11>(c)), c3d(cx<3,11>(d)), c3e(cx<3,11>(e)), s3f(sx<3,11>(f)), s3g(sx<3,11>(g)), s3h(sx<3,11>(h)), s3i(sx<3,11>(i)), s3j(sx<3,11>(j));
-		TYPE c4a(cx<4,11>(a)), c4b(cx<4,11>(b)), c4c(cx<4,11>(c)), c4d(cx<4,11>(d)), c4e(cx<4,11>(e)), s4f(sx<4,11>(f)), s4g(sx<4,11>(g)), s4h(sx<4,11>(h)), s4i(sx<4,11>(i)), s4j(sx<4,11>(j));
-		TYPE c5a(cx<5,11>(a)), c5b(cx<5,11>(b)), c5c(cx<5,11>(c)), c5d(cx<5,11>(d)), c5e(cx<5,11>(e)), s5f(sx<5,11>(f)), s5g(sx<5,11>(g)), s5h(sx<5,11>(h)), s5i(sx<5,11>(i)), s5j(sx<5,11>(j));
-
+		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6);
+		TYPE f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
 		*out0 = in0 + a + b + c + d + e;
-		*out1 = in0 + c1a + c2b + c3c + c4d + c5e - s1f - s2g - s3h - s4i - s5j;
-		*out2 = in0 + c2a + c4b + c5c + c3d + c1e - s2f - s4g + s5h + s3i + s1j;
-		*out3 = in0 + c3a + c5b + c2c + c1d + c4e - s3f + s5g + s2h - s1i - s4j;
-		*out4 = in0 + c4a + c3b + c1c + c5d + c2e - s4f + s3g - s1h - s5i + s2j;
-		*out5 = in0 + c5a + c1b + c4c + c2d + c3e - s5f + s1g - s4h + s2i - s3j;
-		*out6 = in0 + c5a + c1b + c4c + c2d + c3e + s5f - s1g + s4h - s2i + s3j;
-		*out7 = in0 + c4a + c3b + c1c + c5d + c2e + s4f - s3g + s1h + s5i - s2j;
-		*out8 = in0 + c3a + c5b + c2c + c1d + c4e + s3f - s5g - s2h + s1i + s4j;
-		*out9 = in0 + c2a + c4b + c5c + c3d + c1e + s2f + s4g - s5h - s3i - s1j;
-		*out10= in0 + c1a + c2b + c3c + c4d + c5e + s1f + s2g + s3h + s4i + s5j;
+		*out1 = in0 + cx<1,11>(a) + cx<2,11>(b) + cx<3,11>(c) + cx<4,11>(d) + cx<5,11>(e) - sx<1,11>(f) - sx<2,11>(g) - sx<3,11>(h) - sx<4,11>(i) - sx<5,11>(j);
+		*out2 = in0 + cx<2,11>(a) + cx<4,11>(b) + cx<5,11>(c) + cx<3,11>(d) + cx<1,11>(e) - sx<2,11>(f) - sx<4,11>(g) + sx<5,11>(h) + sx<3,11>(i) + sx<1,11>(j);
+		*out3 = in0 + cx<3,11>(a) + cx<5,11>(b) + cx<2,11>(c) + cx<1,11>(d) + cx<4,11>(e) - sx<3,11>(f) + sx<5,11>(g) + sx<2,11>(h) - sx<1,11>(i) - sx<4,11>(j);
+		*out4 = in0 + cx<4,11>(a) + cx<3,11>(b) + cx<1,11>(c) + cx<5,11>(d) + cx<2,11>(e) - sx<4,11>(f) + sx<3,11>(g) - sx<1,11>(h) - sx<5,11>(i) + sx<2,11>(j);
+		*out5 = in0 + cx<5,11>(a) + cx<1,11>(b) + cx<4,11>(c) + cx<2,11>(d) + cx<3,11>(e) - sx<5,11>(f) + sx<1,11>(g) - sx<4,11>(h) + sx<2,11>(i) - sx<3,11>(j);
+		*out6 = in0 + cx<5,11>(a) + cx<1,11>(b) + cx<4,11>(c) + cx<2,11>(d) + cx<3,11>(e) + sx<5,11>(f) - sx<1,11>(g) + sx<4,11>(h) - sx<2,11>(i) + sx<3,11>(j);
+		*out7 = in0 + cx<4,11>(a) + cx<3,11>(b) + cx<1,11>(c) + cx<5,11>(d) + cx<2,11>(e) + sx<4,11>(f) - sx<3,11>(g) + sx<1,11>(h) + sx<5,11>(i) - sx<2,11>(j);
+		*out8 = in0 + cx<3,11>(a) + cx<5,11>(b) + cx<2,11>(c) + cx<1,11>(d) + cx<4,11>(e) + sx<3,11>(f) - sx<5,11>(g) - sx<2,11>(h) + sx<1,11>(i) + sx<4,11>(j);
+		*out9 = in0 + cx<2,11>(a) + cx<4,11>(b) + cx<5,11>(c) + cx<3,11>(d) + cx<1,11>(e) + sx<2,11>(f) + sx<4,11>(g) - sx<5,11>(h) - sx<3,11>(i) - sx<1,11>(j);
+		*out10= in0 + cx<1,11>(a) + cx<2,11>(b) + cx<3,11>(c) + cx<4,11>(d) + cx<5,11>(e) + sx<1,11>(f) + sx<2,11>(g) + sx<3,11>(h) + sx<4,11>(i) + sx<5,11>(j);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
@@ -378,7 +360,8 @@ struct Dit<13, 13, STRIDE, TYPE, -1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10, TYPE *out11, TYPE *out12,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12)
 	{
-		TYPE a(in1 + in12), b(in2 + in11), c(in3 + in10), d(in4 + in9), e(in5 + in8), f(in6 + in7), g(twiddle(in1, in12)), h(twiddle(in2, in11)), i(twiddle(in3, in10)), j(twiddle(in4, in9)), k(twiddle(in5, in8)), l(twiddle(in6, in7));
+		TYPE a(in1 + in12), b(in2 + in11), c(in3 + in10), d(in4 + in9), e(in5 + in8), f(in6 + in7);
+		TYPE g(twiddle(in1, in12)), h(twiddle(in2, in11)), i(twiddle(in3, in10)), j(twiddle(in4, in9)), k(twiddle(in5, in8)), l(twiddle(in6, in7));
 		*out0 = in0 + a + b + c + d + e + f;
 		*out1 = in0 + cx<1,13>(a) + cx<2,13>(b) + cx<3,13>(c) + cx<4,13>(d) + cx<5,13>(e) + cx<6,13>(f) + sx<1,13>(g) + sx<2,13>(h) + sx<3,13>(i) + sx<4,13>(j) + sx<5,13>(k) + sx<6,13>(l);
 		*out2 = in0 + cx<2,13>(a) + cx<4,13>(b) + cx<6,13>(c) + cx<5,13>(d) + cx<3,13>(e) + cx<1,13>(f) + sx<2,13>(g) + sx<4,13>(h) + sx<6,13>(i) - sx<5,13>(j) - sx<3,13>(k) - sx<1,13>(l);
@@ -405,7 +388,8 @@ struct Dit<13, 13, STRIDE, TYPE, 1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10, TYPE *out11, TYPE *out12,
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12)
 	{
-		TYPE a(in1 + in12), b(in2 + in11), c(in3 + in10), d(in4 + in9), e(in5 + in8), f(in6 + in7), g(twiddle(in1, in12)), h(twiddle(in2, in11)), i(twiddle(in3, in10)), j(twiddle(in4, in9)), k(twiddle(in5, in8)), l(twiddle(in6, in7));
+		TYPE a(in1 + in12), b(in2 + in11), c(in3 + in10), d(in4 + in9), e(in5 + in8), f(in6 + in7);
+		TYPE g(twiddle(in1, in12)), h(twiddle(in2, in11)), i(twiddle(in3, in10)), j(twiddle(in4, in9)), k(twiddle(in5, in8)), l(twiddle(in6, in7));
 		*out0 = in0 + a + b + c + d + e + f;
 		*out1 = in0 + cx<1,13>(a) + cx<2,13>(b) + cx<3,13>(c) + cx<4,13>(d) + cx<5,13>(e) + cx<6,13>(f) - sx<1,13>(g) - sx<2,13>(h) - sx<3,13>(i) - sx<4,13>(j) - sx<5,13>(k) - sx<6,13>(l);
 		*out2 = in0 + cx<2,13>(a) + cx<4,13>(b) + cx<6,13>(c) + cx<5,13>(d) + cx<3,13>(e) + cx<1,13>(f) - sx<2,13>(g) - sx<4,13>(h) - sx<6,13>(i) + sx<5,13>(j) + sx<3,13>(k) + sx<1,13>(l);
