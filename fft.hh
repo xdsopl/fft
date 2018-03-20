@@ -16,46 +16,18 @@ template <typename TYPE>
 static inline TYPE sqrt3(TYPE a) { return std::sqrt(typename TYPE::value_type(3)) * a; }
 template <typename TYPE>
 static inline TYPE rsqrt2(TYPE a) { return (std::sqrt(typename TYPE::value_type(2)) / typename TYPE::value_type(2)) * a; }
-template <typename TYPE>
-static inline TYPE cos2pi5(TYPE a) { return std::cos(typename TYPE::value_type(2 * M_PI / 5)) * a; }
-template <typename TYPE>
-static inline TYPE sin2pi5(TYPE a) { return std::sin(typename TYPE::value_type(2 * M_PI / 5)) * a; }
-template <typename TYPE>
-static inline TYPE cos4pi5(TYPE a) { return std::cos(typename TYPE::value_type(4 * M_PI / 5)) * a; }
-template <typename TYPE>
-static inline TYPE sin4pi5(TYPE a) { return std::sin(typename TYPE::value_type(4 * M_PI / 5)) * a; }
-template <typename TYPE>
-static inline TYPE cos2pi7(TYPE a) { return std::cos(typename TYPE::value_type(2 * M_PI / 7)) * a; }
-template <typename TYPE>
-static inline TYPE sin2pi7(TYPE a) { return std::sin(typename TYPE::value_type(2 * M_PI / 7)) * a; }
-template <typename TYPE>
-static inline TYPE cos4pi7(TYPE a) { return std::cos(typename TYPE::value_type(4 * M_PI / 7)) * a; }
-template <typename TYPE>
-static inline TYPE sin4pi7(TYPE a) { return std::sin(typename TYPE::value_type(4 * M_PI / 7)) * a; }
-template <typename TYPE>
-static inline TYPE cos6pi7(TYPE a) { return std::cos(typename TYPE::value_type(6 * M_PI / 7)) * a; }
-template <typename TYPE>
-static inline TYPE sin6pi7(TYPE a) { return std::sin(typename TYPE::value_type(6 * M_PI / 7)) * a; }
-template <typename TYPE>
-static inline TYPE cos2pi11(TYPE a) { return std::cos(typename TYPE::value_type(2 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE sin2pi11(TYPE a) { return std::sin(typename TYPE::value_type(2 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE cos4pi11(TYPE a) { return std::cos(typename TYPE::value_type(4 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE sin4pi11(TYPE a) { return std::sin(typename TYPE::value_type(4 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE cos6pi11(TYPE a) { return std::cos(typename TYPE::value_type(6 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE sin6pi11(TYPE a) { return std::sin(typename TYPE::value_type(6 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE cos8pi11(TYPE a) { return std::cos(typename TYPE::value_type(8 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE sin8pi11(TYPE a) { return std::sin(typename TYPE::value_type(8 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE cos10pi11(TYPE a) { return std::cos(typename TYPE::value_type(10 * M_PI / 11)) * a; }
-template <typename TYPE>
-static inline TYPE sin10pi11(TYPE a) { return std::sin(typename TYPE::value_type(10 * M_PI / 11)) * a; }
+
+template <int n, int N, typename TYPE>
+static inline TYPE cx(TYPE a)
+{
+	return std::cos(typename TYPE::value_type(n * 2 * M_PI / N)) * a;
+}
+
+template <int n, int N, typename TYPE>
+static inline TYPE sx(TYPE a)
+{
+	return std::sin(typename TYPE::value_type(n * 2 * M_PI / N)) * a;
+}
 
 template <typename TYPE>
 static inline TYPE fiddle(TYPE a, TYPE b)
@@ -190,8 +162,8 @@ struct Dit<5, 5, STRIDE, TYPE, -1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
 		TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-		TYPE c1a(cos2pi5(a)), c1b(cos2pi5(b)), s1c(sin2pi5(c)), s1d(sin2pi5(d));
-		TYPE c2a(cos4pi5(a)), c2b(cos4pi5(b)), s2c(sin4pi5(c)), s2d(sin4pi5(d));
+		TYPE c1a(cx<1,5>(a)), c1b(cx<1,5>(b)), s1c(sx<1,5>(c)), s1d(sx<1,5>(d));
+		TYPE c2a(cx<2,5>(a)), c2b(cx<2,5>(b)), s2c(sx<2,5>(c)), s2d(sx<2,5>(d));
 		*out0 = in0 + a + b;
 		*out1 = in0 + c1a + c2b + s1c + s2d;
 		*out2 = in0 + c2a + c1b + s2c - s1d;
@@ -211,8 +183,8 @@ struct Dit<5, 5, STRIDE, TYPE, 1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4)
 	{
 		TYPE a(in1 + in4), b(in2 + in3), c(twiddle(in1, in4)), d(twiddle(in2, in3));
-		TYPE c1a(cos2pi5(a)), c1b(cos2pi5(b)), s1c(sin2pi5(c)), s1d(sin2pi5(d));
-		TYPE c2a(cos4pi5(a)), c2b(cos4pi5(b)), s2c(sin4pi5(c)), s2d(sin4pi5(d));
+		TYPE c1a(cx<1,5>(a)), c1b(cx<1,5>(b)), s1c(sx<1,5>(c)), s1d(sx<1,5>(d));
+		TYPE c2a(cx<2,5>(a)), c2b(cx<2,5>(b)), s2c(sx<2,5>(c)), s2d(sx<2,5>(d));
 		*out0 = in0 + a + b;
 		*out1 = in0 + c1a + c2b - s1c - s2d;
 		*out2 = in0 + c2a + c1b - s2c + s1d;
@@ -232,9 +204,9 @@ struct Dit<7, 7, STRIDE, TYPE, -1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6)
 	{
 		TYPE a(in1 + in6), b(in2 + in5), c(in3 + in4), d(twiddle(in1, in6)), e(twiddle(in2, in5)), f(twiddle(in3, in4));
-		TYPE c1a(cos2pi7(a)), c1b(cos2pi7(b)), c1c(cos2pi7(c)), s1d(sin2pi7(d)), s1e(sin2pi7(e)), s1f(sin2pi7(f));
-		TYPE c2a(cos4pi7(a)), c2b(cos4pi7(b)), c2c(cos4pi7(c)), s2d(sin4pi7(d)), s2e(sin4pi7(e)), s2f(sin4pi7(f));
-		TYPE c3a(cos6pi7(a)), c3b(cos6pi7(b)), c3c(cos6pi7(c)), s3d(sin6pi7(d)), s3e(sin6pi7(e)), s3f(sin6pi7(f));
+		TYPE c1a(cx<1,7>(a)), c1b(cx<1,7>(b)), c1c(cx<1,7>(c)), s1d(sx<1,7>(d)), s1e(sx<1,7>(e)), s1f(sx<1,7>(f));
+		TYPE c2a(cx<2,7>(a)), c2b(cx<2,7>(b)), c2c(cx<2,7>(c)), s2d(sx<2,7>(d)), s2e(sx<2,7>(e)), s2f(sx<2,7>(f));
+		TYPE c3a(cx<3,7>(a)), c3b(cx<3,7>(b)), c3c(cx<3,7>(c)), s3d(sx<3,7>(d)), s3e(sx<3,7>(e)), s3f(sx<3,7>(f));
 
 		*out0 = in0 + a + b + c;
 		*out1 = in0 + c1a + c2b + c3c + s1d + s2e + s3f;
@@ -257,9 +229,9 @@ struct Dit<7, 7, STRIDE, TYPE, 1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6)
 	{
 		TYPE a(in1 + in6), b(in2 + in5), c(in3 + in4), d(twiddle(in1, in6)), e(twiddle(in2, in5)), f(twiddle(in3, in4));
-		TYPE c1a(cos2pi7(a)), c1b(cos2pi7(b)), c1c(cos2pi7(c)), s1d(sin2pi7(d)), s1e(sin2pi7(e)), s1f(sin2pi7(f));
-		TYPE c2a(cos4pi7(a)), c2b(cos4pi7(b)), c2c(cos4pi7(c)), s2d(sin4pi7(d)), s2e(sin4pi7(e)), s2f(sin4pi7(f));
-		TYPE c3a(cos6pi7(a)), c3b(cos6pi7(b)), c3c(cos6pi7(c)), s3d(sin6pi7(d)), s3e(sin6pi7(e)), s3f(sin6pi7(f));
+		TYPE c1a(cx<1,7>(a)), c1b(cx<1,7>(b)), c1c(cx<1,7>(c)), s1d(sx<1,7>(d)), s1e(sx<1,7>(e)), s1f(sx<1,7>(f));
+		TYPE c2a(cx<2,7>(a)), c2b(cx<2,7>(b)), c2c(cx<2,7>(c)), s2d(sx<2,7>(d)), s2e(sx<2,7>(e)), s2f(sx<2,7>(f));
+		TYPE c3a(cx<3,7>(a)), c3b(cx<3,7>(b)), c3c(cx<3,7>(c)), s3d(sx<3,7>(d)), s3e(sx<3,7>(e)), s3f(sx<3,7>(f));
 
 		*out0 = in0 + a + b + c;
 		*out1 = in0 + c1a + c2b + c3c - s1d - s2e - s3f;
@@ -328,11 +300,11 @@ struct Dit<11, 11, STRIDE, TYPE, -1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
 	{
 		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6), f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
-		TYPE c1a(cos2pi11(a)), c1b(cos2pi11(b)), c1c(cos2pi11(c)), c1d(cos2pi11(d)), c1e(cos2pi11(e)), s1f(sin2pi11(f)), s1g(sin2pi11(g)), s1h(sin2pi11(h)), s1i(sin2pi11(i)), s1j(sin2pi11(j));
-		TYPE c2a(cos4pi11(a)), c2b(cos4pi11(b)), c2c(cos4pi11(c)), c2d(cos4pi11(d)), c2e(cos4pi11(e)), s2f(sin4pi11(f)), s2g(sin4pi11(g)), s2h(sin4pi11(h)), s2i(sin4pi11(i)), s2j(sin4pi11(j));
-		TYPE c3a(cos6pi11(a)), c3b(cos6pi11(b)), c3c(cos6pi11(c)), c3d(cos6pi11(d)), c3e(cos6pi11(e)), s3f(sin6pi11(f)), s3g(sin6pi11(g)), s3h(sin6pi11(h)), s3i(sin6pi11(i)), s3j(sin6pi11(j));
-		TYPE c4a(cos8pi11(a)), c4b(cos8pi11(b)), c4c(cos8pi11(c)), c4d(cos8pi11(d)), c4e(cos8pi11(e)), s4f(sin8pi11(f)), s4g(sin8pi11(g)), s4h(sin8pi11(h)), s4i(sin8pi11(i)), s4j(sin8pi11(j));
-		TYPE c5a(cos10pi11(a)), c5b(cos10pi11(b)), c5c(cos10pi11(c)), c5d(cos10pi11(d)), c5e(cos10pi11(e)), s5f(sin10pi11(f)), s5g(sin10pi11(g)), s5h(sin10pi11(h)), s5i(sin10pi11(i)), s5j(sin10pi11(j));
+		TYPE c1a(cx<1,11>(a)), c1b(cx<1,11>(b)), c1c(cx<1,11>(c)), c1d(cx<1,11>(d)), c1e(cx<1,11>(e)), s1f(sx<1,11>(f)), s1g(sx<1,11>(g)), s1h(sx<1,11>(h)), s1i(sx<1,11>(i)), s1j(sx<1,11>(j));
+		TYPE c2a(cx<2,11>(a)), c2b(cx<2,11>(b)), c2c(cx<2,11>(c)), c2d(cx<2,11>(d)), c2e(cx<2,11>(e)), s2f(sx<2,11>(f)), s2g(sx<2,11>(g)), s2h(sx<2,11>(h)), s2i(sx<2,11>(i)), s2j(sx<2,11>(j));
+		TYPE c3a(cx<3,11>(a)), c3b(cx<3,11>(b)), c3c(cx<3,11>(c)), c3d(cx<3,11>(d)), c3e(cx<3,11>(e)), s3f(sx<3,11>(f)), s3g(sx<3,11>(g)), s3h(sx<3,11>(h)), s3i(sx<3,11>(i)), s3j(sx<3,11>(j));
+		TYPE c4a(cx<4,11>(a)), c4b(cx<4,11>(b)), c4c(cx<4,11>(c)), c4d(cx<4,11>(d)), c4e(cx<4,11>(e)), s4f(sx<4,11>(f)), s4g(sx<4,11>(g)), s4h(sx<4,11>(h)), s4i(sx<4,11>(i)), s4j(sx<4,11>(j));
+		TYPE c5a(cx<5,11>(a)), c5b(cx<5,11>(b)), c5c(cx<5,11>(c)), c5d(cx<5,11>(d)), c5e(cx<5,11>(e)), s5f(sx<5,11>(f)), s5g(sx<5,11>(g)), s5h(sx<5,11>(h)), s5i(sx<5,11>(i)), s5j(sx<5,11>(j));
 
 		*out0 = in0 + a + b + c + d + e;
 		*out1 = in0 + c1a + c2b + c3c + c4d + c5e + s1f + s2g + s3h + s4i + s5j;
@@ -359,11 +331,11 @@ struct Dit<11, 11, STRIDE, TYPE, 1>
 			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10)
 	{
 		TYPE a(in1 + in10), b(in2 + in9), c(in3 + in8), d(in4 + in7), e(in5 + in6), f(twiddle(in1, in10)), g(twiddle(in2, in9)), h(twiddle(in3, in8)), i(twiddle(in4, in7)), j(twiddle(in5, in6));
-		TYPE c1a(cos2pi11(a)), c1b(cos2pi11(b)), c1c(cos2pi11(c)), c1d(cos2pi11(d)), c1e(cos2pi11(e)), s1f(sin2pi11(f)), s1g(sin2pi11(g)), s1h(sin2pi11(h)), s1i(sin2pi11(i)), s1j(sin2pi11(j));
-		TYPE c2a(cos4pi11(a)), c2b(cos4pi11(b)), c2c(cos4pi11(c)), c2d(cos4pi11(d)), c2e(cos4pi11(e)), s2f(sin4pi11(f)), s2g(sin4pi11(g)), s2h(sin4pi11(h)), s2i(sin4pi11(i)), s2j(sin4pi11(j));
-		TYPE c3a(cos6pi11(a)), c3b(cos6pi11(b)), c3c(cos6pi11(c)), c3d(cos6pi11(d)), c3e(cos6pi11(e)), s3f(sin6pi11(f)), s3g(sin6pi11(g)), s3h(sin6pi11(h)), s3i(sin6pi11(i)), s3j(sin6pi11(j));
-		TYPE c4a(cos8pi11(a)), c4b(cos8pi11(b)), c4c(cos8pi11(c)), c4d(cos8pi11(d)), c4e(cos8pi11(e)), s4f(sin8pi11(f)), s4g(sin8pi11(g)), s4h(sin8pi11(h)), s4i(sin8pi11(i)), s4j(sin8pi11(j));
-		TYPE c5a(cos10pi11(a)), c5b(cos10pi11(b)), c5c(cos10pi11(c)), c5d(cos10pi11(d)), c5e(cos10pi11(e)), s5f(sin10pi11(f)), s5g(sin10pi11(g)), s5h(sin10pi11(h)), s5i(sin10pi11(i)), s5j(sin10pi11(j));
+		TYPE c1a(cx<1,11>(a)), c1b(cx<1,11>(b)), c1c(cx<1,11>(c)), c1d(cx<1,11>(d)), c1e(cx<1,11>(e)), s1f(sx<1,11>(f)), s1g(sx<1,11>(g)), s1h(sx<1,11>(h)), s1i(sx<1,11>(i)), s1j(sx<1,11>(j));
+		TYPE c2a(cx<2,11>(a)), c2b(cx<2,11>(b)), c2c(cx<2,11>(c)), c2d(cx<2,11>(d)), c2e(cx<2,11>(e)), s2f(sx<2,11>(f)), s2g(sx<2,11>(g)), s2h(sx<2,11>(h)), s2i(sx<2,11>(i)), s2j(sx<2,11>(j));
+		TYPE c3a(cx<3,11>(a)), c3b(cx<3,11>(b)), c3c(cx<3,11>(c)), c3d(cx<3,11>(d)), c3e(cx<3,11>(e)), s3f(sx<3,11>(f)), s3g(sx<3,11>(g)), s3h(sx<3,11>(h)), s3i(sx<3,11>(i)), s3j(sx<3,11>(j));
+		TYPE c4a(cx<4,11>(a)), c4b(cx<4,11>(b)), c4c(cx<4,11>(c)), c4d(cx<4,11>(d)), c4e(cx<4,11>(e)), s4f(sx<4,11>(f)), s4g(sx<4,11>(g)), s4h(sx<4,11>(h)), s4i(sx<4,11>(i)), s4j(sx<4,11>(j));
+		TYPE c5a(cx<5,11>(a)), c5b(cx<5,11>(b)), c5c(cx<5,11>(c)), c5d(cx<5,11>(d)), c5e(cx<5,11>(e)), s5f(sx<5,11>(f)), s5g(sx<5,11>(g)), s5h(sx<5,11>(h)), s5i(sx<5,11>(i)), s5j(sx<5,11>(j));
 
 		*out0 = in0 + a + b + c + d + e;
 		*out1 = in0 + c1a + c2b + c3c + c4d + c5e - s1f - s2g - s3h - s4i - s5j;
