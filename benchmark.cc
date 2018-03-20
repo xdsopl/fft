@@ -68,7 +68,7 @@ int main()
 	typedef Complex<value_type> complex_type;
 #endif
 
-#if 0
+#if 1
 	test<1, complex_type>();
 	test<2, complex_type>();
 	test<3, complex_type>();
