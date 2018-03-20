@@ -49,7 +49,8 @@ static inline TYPE ex(TYPE a)
 template <typename TYPE>
 static inline TYPE fiddle(TYPE a, TYPE b)
 {
-	return TYPE(a.real() + a.imag() - b.real() + b.imag(), a.imag() - a.real() - b.real() - b.imag());
+	return TYPE(a.real() + a.imag() - b.real() + b.imag(),
+		a.imag() - a.real() - b.real() - b.imag());
 }
 
 template <typename TYPE>
@@ -75,7 +76,16 @@ static constexpr int pow8(int N)
 
 static constexpr int split(int N)
 {
-	return (!(N%13)) ? 13 : (!(N%11)) ? 11 : (!(N%7)) ? 7 : (!(N%5)) ? 5 : (!(N%3)) ? 3 : (!(N%8)&&pow8(N)) ? 8 : (!(N%4)&&pow4(N)) ? 4 : (!(N%2)) ? 2 : 1;
+	return
+		(!(N%13)) ? 13 :
+		(!(N%11)) ? 11 :
+		(!(N%7)) ? 7 :
+		(!(N%5)) ? 5 :
+		(!(N%3)) ? 3 :
+		(!(N%8)&&pow8(N)) ? 8 :
+		(!(N%4)&&pow4(N)) ? 4 :
+		(!(N%2)) ? 2 :
+		1;
 }
 
 template <int RADIX, int BINS, int STRIDE, typename TYPE, int SIGN>
@@ -151,7 +161,8 @@ struct Dit<4, 4, STRIDE, TYPE, -1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE]);
 	}
 };
 
@@ -170,7 +181,8 @@ struct Dit<4, 4, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE]);
 	}
 };
 
@@ -190,7 +202,8 @@ struct Dit<5, 5, STRIDE, TYPE, -1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE]);
 	}
 };
 
@@ -210,7 +223,8 @@ struct Dit<5, 5, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE]);
 	}
 };
 
@@ -233,7 +247,8 @@ struct Dit<7, 7, STRIDE, TYPE, -1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE]);
 	}
 };
 
@@ -256,7 +271,8 @@ struct Dit<7, 7, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE]);
 	}
 };
 
@@ -283,7 +299,8 @@ struct Dit<8, 8, STRIDE, TYPE, -1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE]);
 	}
 };
 
@@ -310,7 +327,8 @@ struct Dit<8, 8, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE]);
 	}
 };
 
@@ -339,7 +357,8 @@ struct Dit<11, 11, STRIDE, TYPE, -1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
 	}
 };
 
@@ -368,7 +387,8 @@ struct Dit<11, 11, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
 	}
 };
 
@@ -400,7 +420,8 @@ struct Dit<13, 13, STRIDE, TYPE, -1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE]);
 	}
 };
 
@@ -432,7 +453,8 @@ struct Dit<13, 13, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12, in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE]);
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE]);
 	}
 };
 
