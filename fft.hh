@@ -11,11 +11,22 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 namespace FFT {
 
 template <typename TYPE>
-static inline TYPE half(TYPE a) { return typename TYPE::value_type(0.5) * a; }
+static inline TYPE half(TYPE a)
+{
+	return typename TYPE::value_type(0.5) * a;
+}
+
 template <typename TYPE>
-static inline TYPE sqrt3(TYPE a) { return std::sqrt(typename TYPE::value_type(3)) * a; }
+static inline TYPE sqrt3(TYPE a)
+{
+	return std::sqrt(typename TYPE::value_type(3)) * a;
+}
+
 template <typename TYPE>
-static inline TYPE rsqrt2(TYPE a) { return (std::sqrt(typename TYPE::value_type(2)) / typename TYPE::value_type(2)) * a; }
+static inline TYPE rsqrt2(TYPE a)
+{
+	return (std::sqrt(typename TYPE::value_type(2)) / typename TYPE::value_type(2)) * a;
+}
 
 template <int n, int N, typename TYPE>
 static inline TYPE cx(TYPE a)
