@@ -1,0 +1,13 @@
+set terminal png
+set logscale x 2
+set xlabel "fft size"
+
+set output "error.png"
+set ylabel "max error"
+plot "blah.txt" u 2:4 w l t ""
+
+set output "speed.png"
+set logscale y 10
+set ylabel "ffts per second"
+plot "blah.txt" u 2:10 w l t ""
+

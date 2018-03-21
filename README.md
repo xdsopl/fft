@@ -1,8 +1,3 @@
-fft - mixed radix fft
-Written in 2015 by <Ahmet Inan> <xdsopl@googlemail.com>
-To the extent possible under law, the author(s) have dedicated all copyright and related and neighboring rights to this software to the public domain worldwide. This software is distributed without any warranty.
-You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
-
 Simple and straightforward mixed radix DIT FFT implementation in C++11
 
 It can do FFT of sizes:
@@ -11,6 +6,15 @@ N = 2^a * 3^b * 5^c * 7^d * 11^e * 13^f * 17^g * 19^h
 
 There are hand optimized kernels for radix-4 and radix-8
 
+![speed.png](speed.png)
+
+More calculations mean larger errors but fortunately they do not grow that fast with increasing FFT size:
+
+![error.png](error.png)
+
+The above images are made from the following data and using gnuplot:
+
+```
 # make test
 clang++ -stdlib=libc++ -std=c++11 -W -Wall -O3 -march=native benchmark.cc -o benchmark
 ./benchmark > /dev/null
@@ -111,3 +115,4 @@ size: 1080 error:  1.3552e-15 after      8358 ffts: 5.27916e-12 speed:       100
 size: 1280 error: 1.02358e-15 after      6900 ffts:  2.9793e-12 speed:       118965
 size: 1920 error: 1.28477e-15 after      4374 ffts:  2.0381e-12 speed:        67292
 size: 4096 error: 1.11576e-15 after      1878 ffts: 8.43452e-13 speed:        29343
+```
