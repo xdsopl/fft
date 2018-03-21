@@ -134,10 +134,10 @@ struct Dit<3, 3, STRIDE, TYPE, 1>
 {
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE in0, TYPE in1, TYPE in2)
 	{
-		TYPE a(in1 + in2), b(sqrt3(twiddle(in2, in1)));
+		TYPE a(in1 + in2), b(sqrt3(twiddle(in1, in2)));
 		*out0 = in0 + a;
-		*out1 = in0 - half(a - b);
-		*out2 = in0 - half(a + b);
+		*out1 = in0 - half(a + b);
+		*out2 = in0 - half(a - b);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
