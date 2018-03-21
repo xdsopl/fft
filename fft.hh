@@ -49,8 +49,8 @@ static inline TYPE ex(TYPE a)
 template <typename TYPE>
 static inline TYPE fiddle(TYPE a, TYPE b)
 {
-	return TYPE(a.real() + a.imag() - b.real() + b.imag(),
-		a.imag() - a.real() - b.real() - b.imag());
+	TYPE c(a + b), d(a - b);
+	return TYPE(d.real() + c.imag(), d.imag() - c.real());
 }
 
 template <typename TYPE>
