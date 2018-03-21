@@ -1,13 +1,14 @@
 set terminal png
 set logscale x 2
+set logscale y 10
 set xlabel "fft size"
 
-set output "error.png"
-set ylabel "max error"
-plot "blah.txt" u 2:4 w l t ""
-
 set output "speed.png"
-set logscale y 10
 set ylabel "ffts per second"
-plot "blah.txt" u 2:10 w l t ""
+plot "float.txt" u 2:10 w l t "single precision", "double.txt" u 2:10 w l t "double precision"
+
+set output "error.png"
+set key center center
+set ylabel "max error"
+plot "float.txt" u 2:4 w l t "single precision", "double.txt" u 2:4 w l t "double precision"
 
