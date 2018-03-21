@@ -53,10 +53,10 @@ static void test()
 	for (int i = 0; i < BINS; ++i)
 		max_error_growth = std::max(max_error_growth, abs(a[i] - c[i]));
 
-	std::cerr << "FFT size: " << std::setw(4) << BINS;
-	std::cerr << " max error: " << std::setw(11) << max_error;
-	std::cerr << " max error growth after " << std::setw(9) << ffts << " ffts: " << std::setw(11) << max_error_growth;
-	std::cerr << " speed: " << std::setw(12) << (ffts * 1000LL) / std::max(1LL, msec.count()) << " ffts / sec" << std::endl;
+	std::cerr << "size: " << std::setw(4) << BINS;
+	std::cerr << " error: " << std::setw(11) << max_error;
+	std::cerr << " after " << std::setw(9) << ffts << " ffts: " << std::setw(11) << max_error_growth;
+	std::cerr << " speed: " << std::setw(12) << (ffts * 1000LL) / std::max(1LL, msec.count()) << std::endl;
 }
 
 int main()
