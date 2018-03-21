@@ -2,7 +2,7 @@ Simple and straightforward mixed radix DIT FFT implementation in C++11
 
 It can do FFT of sizes:
 
-N = 2^a * 3^b * 5^c * 7^d * 11^e * 13^f * 17^g * 19^h * 23^i * 29^j
+N = 2^a * 3^b * 5^c * 7^d * 11^e * 13^f * 17^g * 19^h * 23^i * 29^j * 31^k
 
 There are hand optimized kernels for radix-4 and radix-8
 

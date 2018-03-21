@@ -77,6 +77,7 @@ static constexpr int pow8(int N)
 static constexpr int split(int N)
 {
 	return
+		(!(N % 31)) ? 31 :
 		(!(N % 29)) ? 29 :
 		(!(N % 23)) ? 23 :
 		(!(N % 19)) ? 19 :
@@ -985,6 +986,131 @@ struct Dit<29, BINS, STRIDE, TYPE, SIGN>
 				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE, l11 += 11 * STRIDE, l12 += 12 * STRIDE, l13 += 13 * STRIDE, l14 += 14 * STRIDE, l15 += 15 * STRIDE, l16 += 16 * STRIDE, l17 += 17 * STRIDE, l18 += 18 * STRIDE, l19 += 19 * STRIDE, l20 += 20 * STRIDE, l21 += 21 * STRIDE, l22 += 22 * STRIDE, l23 += 23 * STRIDE, l24 += 24 * STRIDE, l25 += 25 * STRIDE, l26 += 26 * STRIDE, l27 += 27 * STRIDE, l28 += 28 * STRIDE)
 			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10, out + k11, out + k12, out + k13, out + k14, out + k15, out + k16, out + k17, out + k18, out + k19, out + k20, out + k21, out + k22, out + k23, out + k24, out + k25, out + k26, out + k27, out + k28,
 				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10], z[l11] * out[k11], z[l12] * out[k12], z[l13] * out[k13], z[l14] * out[k14], z[l15] * out[k15], z[l16] * out[k16], z[l17] * out[k17], z[l18] * out[k18], z[l19] * out[k19], z[l20] * out[k20], z[l21] * out[k21], z[l22] * out[k22], z[l23] * out[k23], z[l24] * out[k24], z[l25] * out[k25], z[l26] * out[k26], z[l27] * out[k27], z[l28] * out[k28]);
+	}
+};
+
+template <int STRIDE, typename TYPE>
+struct Dit<31, 31, STRIDE, TYPE, -1>
+{
+	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10, TYPE *out11, TYPE *out12, TYPE *out13, TYPE *out14, TYPE *out15, TYPE *out16, TYPE *out17, TYPE *out18, TYPE *out19, TYPE *out20, TYPE *out21, TYPE *out22, TYPE *out23, TYPE *out24, TYPE *out25, TYPE *out26, TYPE *out27, TYPE *out28, TYPE *out29, TYPE *out30,
+			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12, TYPE in13, TYPE in14, TYPE in15, TYPE in16, TYPE in17, TYPE in18, TYPE in19, TYPE in20, TYPE in21, TYPE in22, TYPE in23, TYPE in24, TYPE in25, TYPE in26, TYPE in27, TYPE in28, TYPE in29, TYPE in30)
+	{
+		Dit<31, 31, STRIDE, TYPE, 1>::dft(out0, out30, out29, out28, out27, out26, out25, out24, out23, out22, out21, out20, out19, out18, out17, out16, out15, out14, out13, out12, out11, out10, out9, out8, out7, out6, out5, out4, out3, out2, out1,
+			in0, in1, in2, in3, in4, in5, in6, in7, in8, in9, in10, in11, in12, in13, in14, in15, in16, in17, in18, in19, in20, in21, in22, in23, in24, in25, in26, in27, in28, in29, in30);
+	}
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
+	{
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12, out + 13, out + 14, out + 15, out + 16, out + 17, out + 18, out + 19, out + 20, out + 21, out + 22, out + 23, out + 24, out + 25, out + 26, out + 27, out + 28, out + 29, out + 30,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE], in[13 * STRIDE], in[14 * STRIDE], in[15 * STRIDE], in[16 * STRIDE], in[17 * STRIDE], in[18 * STRIDE], in[19 * STRIDE], in[20 * STRIDE], in[21 * STRIDE], in[22 * STRIDE], in[23 * STRIDE], in[24 * STRIDE], in[25 * STRIDE], in[26 * STRIDE], in[27 * STRIDE], in[28 * STRIDE], in[29 * STRIDE], in[30 * STRIDE]);
+	}
+};
+
+template <int STRIDE, typename TYPE>
+struct Dit<31, 31, STRIDE, TYPE, 1>
+{
+	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE *out3, TYPE *out4, TYPE *out5, TYPE *out6, TYPE *out7, TYPE *out8, TYPE *out9, TYPE *out10, TYPE *out11, TYPE *out12, TYPE *out13, TYPE *out14, TYPE *out15, TYPE *out16, TYPE *out17, TYPE *out18, TYPE *out19, TYPE *out20, TYPE *out21, TYPE *out22, TYPE *out23, TYPE *out24, TYPE *out25, TYPE *out26, TYPE *out27, TYPE *out28, TYPE *out29, TYPE *out30,
+			TYPE in0, TYPE in1, TYPE in2, TYPE in3, TYPE in4, TYPE in5, TYPE in6, TYPE in7, TYPE in8, TYPE in9, TYPE in10, TYPE in11, TYPE in12, TYPE in13, TYPE in14, TYPE in15, TYPE in16, TYPE in17, TYPE in18, TYPE in19, TYPE in20, TYPE in21, TYPE in22, TYPE in23, TYPE in24, TYPE in25, TYPE in26, TYPE in27, TYPE in28, TYPE in29, TYPE in30)
+	{
+		TYPE a1(in1 + in30), t1(twiddle(in1, in30));
+		TYPE a2(in2 + in29), t2(twiddle(in2, in29));
+		TYPE a3(in3 + in28), t3(twiddle(in3, in28));
+		TYPE a4(in4 + in27), t4(twiddle(in4, in27));
+		TYPE a5(in5 + in26), t5(twiddle(in5, in26));
+		TYPE a6(in6 + in25), t6(twiddle(in6, in25));
+		TYPE a7(in7 + in24), t7(twiddle(in7, in24));
+		TYPE a8(in8 + in23), t8(twiddle(in8, in23));
+		TYPE a9(in9 + in22), t9(twiddle(in9, in22));
+		TYPE a10(in10 + in21), t10(twiddle(in10, in21));
+		TYPE a11(in11 + in20), t11(twiddle(in11, in20));
+		TYPE a12(in12 + in19), t12(twiddle(in12, in19));
+		TYPE a13(in13 + in18), t13(twiddle(in13, in18));
+		TYPE a14(in14 + in17), t14(twiddle(in14, in17));
+		TYPE a15(in15 + in16), t15(twiddle(in15, in16));
+		TYPE c1(cx<1,31>(a1) + cx<2,31>(a2) + cx<3,31>(a3) + cx<4,31>(a4) + cx<5,31>(a5) + cx<6,31>(a6) + cx<7,31>(a7) + cx<8,31>(a8) + cx<9,31>(a9) + cx<10,31>(a10) + cx<11,31>(a11) + cx<12,31>(a12) + cx<13,31>(a13) + cx<14,31>(a14) + cx<15,31>(a15));
+		TYPE s1(sx<1,31>(t1) + sx<2,31>(t2) + sx<3,31>(t3) + sx<4,31>(t4) + sx<5,31>(t5) + sx<6,31>(t6) + sx<7,31>(t7) + sx<8,31>(t8) + sx<9,31>(t9) + sx<10,31>(t10) + sx<11,31>(t11) + sx<12,31>(t12) + sx<13,31>(t13) + sx<14,31>(t14) + sx<15,31>(t15));
+		TYPE c2(cx<2,31>(a1) + cx<4,31>(a2) + cx<6,31>(a3) + cx<8,31>(a4) + cx<10,31>(a5) + cx<12,31>(a6) + cx<14,31>(a7) + cx<15,31>(a8) + cx<13,31>(a9) + cx<11,31>(a10) + cx<9,31>(a11) + cx<7,31>(a12) + cx<5,31>(a13) + cx<3,31>(a14) + cx<1,31>(a15));
+		TYPE s2(sx<2,31>(t1) + sx<4,31>(t2) + sx<6,31>(t3) + sx<8,31>(t4) + sx<10,31>(t5) + sx<12,31>(t6) + sx<14,31>(t7) - sx<15,31>(t8) - sx<13,31>(t9) - sx<11,31>(t10) - sx<9,31>(t11) - sx<7,31>(t12) - sx<5,31>(t13) - sx<3,31>(t14) - sx<1,31>(t15));
+		TYPE c3(cx<3,31>(a1) + cx<6,31>(a2) + cx<9,31>(a3) + cx<12,31>(a4) + cx<15,31>(a5) + cx<13,31>(a6) + cx<10,31>(a7) + cx<7,31>(a8) + cx<4,31>(a9) + cx<1,31>(a10) + cx<2,31>(a11) + cx<5,31>(a12) + cx<8,31>(a13) + cx<11,31>(a14) + cx<14,31>(a15));
+		TYPE s3(sx<3,31>(t1) + sx<6,31>(t2) + sx<9,31>(t3) + sx<12,31>(t4) + sx<15,31>(t5) - sx<13,31>(t6) - sx<10,31>(t7) - sx<7,31>(t8) - sx<4,31>(t9) - sx<1,31>(t10) + sx<2,31>(t11) + sx<5,31>(t12) + sx<8,31>(t13) + sx<11,31>(t14) + sx<14,31>(t15));
+		TYPE c4(cx<4,31>(a1) + cx<8,31>(a2) + cx<12,31>(a3) + cx<15,31>(a4) + cx<11,31>(a5) + cx<7,31>(a6) + cx<3,31>(a7) + cx<1,31>(a8) + cx<5,31>(a9) + cx<9,31>(a10) + cx<13,31>(a11) + cx<14,31>(a12) + cx<10,31>(a13) + cx<6,31>(a14) + cx<2,31>(a15));
+		TYPE s4(sx<4,31>(t1) + sx<8,31>(t2) + sx<12,31>(t3) - sx<15,31>(t4) - sx<11,31>(t5) - sx<7,31>(t6) - sx<3,31>(t7) + sx<1,31>(t8) + sx<5,31>(t9) + sx<9,31>(t10) + sx<13,31>(t11) - sx<14,31>(t12) - sx<10,31>(t13) - sx<6,31>(t14) - sx<2,31>(t15));
+		TYPE c5(cx<5,31>(a1) + cx<10,31>(a2) + cx<15,31>(a3) + cx<11,31>(a4) + cx<6,31>(a5) + cx<1,31>(a6) + cx<4,31>(a7) + cx<9,31>(a8) + cx<14,31>(a9) + cx<12,31>(a10) + cx<7,31>(a11) + cx<2,31>(a12) + cx<3,31>(a13) + cx<8,31>(a14) + cx<13,31>(a15));
+		TYPE s5(sx<5,31>(t1) + sx<10,31>(t2) + sx<15,31>(t3) - sx<11,31>(t4) - sx<6,31>(t5) - sx<1,31>(t6) + sx<4,31>(t7) + sx<9,31>(t8) + sx<14,31>(t9) - sx<12,31>(t10) - sx<7,31>(t11) - sx<2,31>(t12) + sx<3,31>(t13) + sx<8,31>(t14) + sx<13,31>(t15));
+		TYPE c6(cx<6,31>(a1) + cx<12,31>(a2) + cx<13,31>(a3) + cx<7,31>(a4) + cx<1,31>(a5) + cx<5,31>(a6) + cx<11,31>(a7) + cx<14,31>(a8) + cx<8,31>(a9) + cx<2,31>(a10) + cx<4,31>(a11) + cx<10,31>(a12) + cx<15,31>(a13) + cx<9,31>(a14) + cx<3,31>(a15));
+		TYPE s6(sx<6,31>(t1) + sx<12,31>(t2) - sx<13,31>(t3) - sx<7,31>(t4) - sx<1,31>(t5) + sx<5,31>(t6) + sx<11,31>(t7) - sx<14,31>(t8) - sx<8,31>(t9) - sx<2,31>(t10) + sx<4,31>(t11) + sx<10,31>(t12) - sx<15,31>(t13) - sx<9,31>(t14) - sx<3,31>(t15));
+		TYPE c7(cx<7,31>(a1) + cx<14,31>(a2) + cx<10,31>(a3) + cx<3,31>(a4) + cx<4,31>(a5) + cx<11,31>(a6) + cx<13,31>(a7) + cx<6,31>(a8) + cx<1,31>(a9) + cx<8,31>(a10) + cx<15,31>(a11) + cx<9,31>(a12) + cx<2,31>(a13) + cx<5,31>(a14) + cx<12,31>(a15));
+		TYPE s7(sx<7,31>(t1) + sx<14,31>(t2) - sx<10,31>(t3) - sx<3,31>(t4) + sx<4,31>(t5) + sx<11,31>(t6) - sx<13,31>(t7) - sx<6,31>(t8) + sx<1,31>(t9) + sx<8,31>(t10) + sx<15,31>(t11) - sx<9,31>(t12) - sx<2,31>(t13) + sx<5,31>(t14) + sx<12,31>(t15));
+		TYPE c8(cx<8,31>(a1) + cx<15,31>(a2) + cx<7,31>(a3) + cx<1,31>(a4) + cx<9,31>(a5) + cx<14,31>(a6) + cx<6,31>(a7) + cx<2,31>(a8) + cx<10,31>(a9) + cx<13,31>(a10) + cx<5,31>(a11) + cx<3,31>(a12) + cx<11,31>(a13) + cx<12,31>(a14) + cx<4,31>(a15));
+		TYPE s8(sx<8,31>(t1) - sx<15,31>(t2) - sx<7,31>(t3) + sx<1,31>(t4) + sx<9,31>(t5) - sx<14,31>(t6) - sx<6,31>(t7) + sx<2,31>(t8) + sx<10,31>(t9) - sx<13,31>(t10) - sx<5,31>(t11) + sx<3,31>(t12) + sx<11,31>(t13) - sx<12,31>(t14) - sx<4,31>(t15));
+		TYPE c9(cx<9,31>(a1) + cx<13,31>(a2) + cx<4,31>(a3) + cx<5,31>(a4) + cx<14,31>(a5) + cx<8,31>(a6) + cx<1,31>(a7) + cx<10,31>(a8) + cx<12,31>(a9) + cx<3,31>(a10) + cx<6,31>(a11) + cx<15,31>(a12) + cx<7,31>(a13) + cx<2,31>(a14) + cx<11,31>(a15));
+		TYPE s9(sx<9,31>(t1) - sx<13,31>(t2) - sx<4,31>(t3) + sx<5,31>(t4) + sx<14,31>(t5) - sx<8,31>(t6) + sx<1,31>(t7) + sx<10,31>(t8) - sx<12,31>(t9) - sx<3,31>(t10) + sx<6,31>(t11) + sx<15,31>(t12) - sx<7,31>(t13) + sx<2,31>(t14) + sx<11,31>(t15));
+		TYPE c10(cx<10,31>(a1) + cx<11,31>(a2) + cx<1,31>(a3) + cx<9,31>(a4) + cx<12,31>(a5) + cx<2,31>(a6) + cx<8,31>(a7) + cx<13,31>(a8) + cx<3,31>(a9) + cx<7,31>(a10) + cx<14,31>(a11) + cx<4,31>(a12) + cx<6,31>(a13) + cx<15,31>(a14) + cx<5,31>(a15));
+		TYPE s10(sx<10,31>(t1) - sx<11,31>(t2) - sx<1,31>(t3) + sx<9,31>(t4) - sx<12,31>(t5) - sx<2,31>(t6) + sx<8,31>(t7) - sx<13,31>(t8) - sx<3,31>(t9) + sx<7,31>(t10) - sx<14,31>(t11) - sx<4,31>(t12) + sx<6,31>(t13) - sx<15,31>(t14) - sx<5,31>(t15));
+		TYPE c11(cx<11,31>(a1) + cx<9,31>(a2) + cx<2,31>(a3) + cx<13,31>(a4) + cx<7,31>(a5) + cx<4,31>(a6) + cx<15,31>(a7) + cx<5,31>(a8) + cx<6,31>(a9) + cx<14,31>(a10) + cx<3,31>(a11) + cx<8,31>(a12) + cx<12,31>(a13) + cx<1,31>(a14) + cx<10,31>(a15));
+		TYPE s11(sx<11,31>(t1) - sx<9,31>(t2) + sx<2,31>(t3) + sx<13,31>(t4) - sx<7,31>(t5) + sx<4,31>(t6) + sx<15,31>(t7) - sx<5,31>(t8) + sx<6,31>(t9) - sx<14,31>(t10) - sx<3,31>(t11) + sx<8,31>(t12) - sx<12,31>(t13) - sx<1,31>(t14) + sx<10,31>(t15));
+		TYPE c12(cx<12,31>(a1) + cx<7,31>(a2) + cx<5,31>(a3) + cx<14,31>(a4) + cx<2,31>(a5) + cx<10,31>(a6) + cx<9,31>(a7) + cx<3,31>(a8) + cx<15,31>(a9) + cx<4,31>(a10) + cx<8,31>(a11) + cx<11,31>(a12) + cx<1,31>(a13) + cx<13,31>(a14) + cx<6,31>(a15));
+		TYPE s12(sx<12,31>(t1) - sx<7,31>(t2) + sx<5,31>(t3) - sx<14,31>(t4) - sx<2,31>(t5) + sx<10,31>(t6) - sx<9,31>(t7) + sx<3,31>(t8) + sx<15,31>(t9) - sx<4,31>(t10) + sx<8,31>(t11) - sx<11,31>(t12) + sx<1,31>(t13) + sx<13,31>(t14) - sx<6,31>(t15));
+		TYPE c13(cx<13,31>(a1) + cx<5,31>(a2) + cx<8,31>(a3) + cx<10,31>(a4) + cx<3,31>(a5) + cx<15,31>(a6) + cx<2,31>(a7) + cx<11,31>(a8) + cx<7,31>(a9) + cx<6,31>(a10) + cx<12,31>(a11) + cx<1,31>(a12) + cx<14,31>(a13) + cx<4,31>(a14) + cx<9,31>(a15));
+		TYPE s13(sx<13,31>(t1) - sx<5,31>(t2) + sx<8,31>(t3) - sx<10,31>(t4) + sx<3,31>(t5) - sx<15,31>(t6) - sx<2,31>(t7) + sx<11,31>(t8) - sx<7,31>(t9) + sx<6,31>(t10) - sx<12,31>(t11) + sx<1,31>(t12) + sx<14,31>(t13) - sx<4,31>(t14) + sx<9,31>(t15));
+		TYPE c14(cx<14,31>(a1) + cx<3,31>(a2) + cx<11,31>(a3) + cx<6,31>(a4) + cx<8,31>(a5) + cx<9,31>(a6) + cx<5,31>(a7) + cx<12,31>(a8) + cx<2,31>(a9) + cx<15,31>(a10) + cx<1,31>(a11) + cx<13,31>(a12) + cx<4,31>(a13) + cx<10,31>(a14) + cx<7,31>(a15));
+		TYPE s14(sx<14,31>(t1) - sx<3,31>(t2) + sx<11,31>(t3) - sx<6,31>(t4) + sx<8,31>(t5) - sx<9,31>(t6) + sx<5,31>(t7) - sx<12,31>(t8) + sx<2,31>(t9) - sx<15,31>(t10) - sx<1,31>(t11) + sx<13,31>(t12) - sx<4,31>(t13) + sx<10,31>(t14) - sx<7,31>(t15));
+		TYPE c15(cx<15,31>(a1) + cx<1,31>(a2) + cx<14,31>(a3) + cx<2,31>(a4) + cx<13,31>(a5) + cx<3,31>(a6) + cx<12,31>(a7) + cx<4,31>(a8) + cx<11,31>(a9) + cx<5,31>(a10) + cx<10,31>(a11) + cx<6,31>(a12) + cx<9,31>(a13) + cx<7,31>(a14) + cx<8,31>(a15));
+		TYPE s15(sx<15,31>(t1) - sx<1,31>(t2) + sx<14,31>(t3) - sx<2,31>(t4) + sx<13,31>(t5) - sx<3,31>(t6) + sx<12,31>(t7) - sx<4,31>(t8) + sx<11,31>(t9) - sx<5,31>(t10) + sx<10,31>(t11) - sx<6,31>(t12) + sx<9,31>(t13) - sx<7,31>(t14) + sx<8,31>(t15));
+		*out0 = in0 + a1 + a2 + a3 + a4 + a5 + a6 + a7 + a8 + a9 + a10 + a11 + a12 + a13 + a14 + a15;
+		*out1 = in0 + c1 - s1;
+		*out2 = in0 + c2 - s2;
+		*out3 = in0 + c3 - s3;
+		*out4 = in0 + c4 - s4;
+		*out5 = in0 + c5 - s5;
+		*out6 = in0 + c6 - s6;
+		*out7 = in0 + c7 - s7;
+		*out8 = in0 + c8 - s8;
+		*out9 = in0 + c9 - s9;
+		*out10 = in0 + c10 - s10;
+		*out11 = in0 + c11 - s11;
+		*out12 = in0 + c12 - s12;
+		*out13 = in0 + c13 - s13;
+		*out14 = in0 + c14 - s14;
+		*out15 = in0 + c15 - s15;
+		*out16 = in0 + c15 + s15;
+		*out17 = in0 + c14 + s14;
+		*out18 = in0 + c13 + s13;
+		*out19 = in0 + c12 + s12;
+		*out20 = in0 + c11 + s11;
+		*out21 = in0 + c10 + s10;
+		*out22 = in0 + c9 + s9;
+		*out23 = in0 + c8 + s8;
+		*out24 = in0 + c7 + s7;
+		*out25 = in0 + c6 + s6;
+		*out26 = in0 + c5 + s5;
+		*out27 = in0 + c4 + s4;
+		*out28 = in0 + c3 + s3;
+		*out29 = in0 + c2 + s2;
+		*out30 = in0 + c1 + s1;
+	}
+	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
+	{
+		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12, out + 13, out + 14, out + 15, out + 16, out + 17, out + 18, out + 19, out + 20, out + 21, out + 22, out + 23, out + 24, out + 25, out + 26, out + 27, out + 28, out + 29, out + 30,
+			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE], in[13 * STRIDE], in[14 * STRIDE], in[15 * STRIDE], in[16 * STRIDE], in[17 * STRIDE], in[18 * STRIDE], in[19 * STRIDE], in[20 * STRIDE], in[21 * STRIDE], in[22 * STRIDE], in[23 * STRIDE], in[24 * STRIDE], in[25 * STRIDE], in[26 * STRIDE], in[27 * STRIDE], in[28 * STRIDE], in[29 * STRIDE], in[30 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<31, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 31;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT, k11 = 11 * QUOTIENT, k12 = 12 * QUOTIENT, k13 = 13 * QUOTIENT, k14 = 14 * QUOTIENT, k15 = 15 * QUOTIENT, k16 = 16 * QUOTIENT, k17 = 17 * QUOTIENT, k18 = 18 * QUOTIENT, k19 = 19 * QUOTIENT, k20 = 20 * QUOTIENT, k21 = 21 * QUOTIENT, k22 = 22 * QUOTIENT, k23 = 23 * QUOTIENT, k24 = 24 * QUOTIENT, k25 = 25 * QUOTIENT, k26 = 26 * QUOTIENT, k27 = 27 * QUOTIENT, k28 = 28 * QUOTIENT, k29 = 29 * QUOTIENT, k30 = 30 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0, l11 = 0, l12 = 0, l13 = 0, l14 = 0, l15 = 0, l16 = 0, l17 = 0, l18 = 0, l19 = 0, l20 = 0, l21 = 0, l22 = 0, l23 = 0, l24 = 0, l25 = 0, l26 = 0, l27 = 0, l28 = 0, l29 = 0, l30 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10, ++k11, ++k12, ++k13, ++k14, ++k15, ++k16, ++k17, ++k18, ++k19, ++k20, ++k21, ++k22, ++k23, ++k24, ++k25, ++k26, ++k27, ++k28, ++k29, ++k30,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE, l11 += 11 * STRIDE, l12 += 12 * STRIDE, l13 += 13 * STRIDE, l14 += 14 * STRIDE, l15 += 15 * STRIDE, l16 += 16 * STRIDE, l17 += 17 * STRIDE, l18 += 18 * STRIDE, l19 += 19 * STRIDE, l20 += 20 * STRIDE, l21 += 21 * STRIDE, l22 += 22 * STRIDE, l23 += 23 * STRIDE, l24 += 24 * STRIDE, l25 += 25 * STRIDE, l26 += 26 * STRIDE, l27 += 27 * STRIDE, l28 += 28 * STRIDE, l29 += 29 * STRIDE, l30 += 30 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10, out + k11, out + k12, out + k13, out + k14, out + k15, out + k16, out + k17, out + k18, out + k19, out + k20, out + k21, out + k22, out + k23, out + k24, out + k25, out + k26, out + k27, out + k28, out + k29, out + k30,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10], z[l11] * out[k11], z[l12] * out[k12], z[l13] * out[k13], z[l14] * out[k14], z[l15] * out[k15], z[l16] * out[k16], z[l17] * out[k17], z[l18] * out[k18], z[l19] * out[k19], z[l20] * out[k20], z[l21] * out[k21], z[l22] * out[k22], z[l23] * out[k23], z[l24] * out[k24], z[l25] * out[k25], z[l26] * out[k26], z[l27] * out[k27], z[l28] * out[k28], z[l29] * out[k29], z[l30] * out[k30]);
 	}
 };
 

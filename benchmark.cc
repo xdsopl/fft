@@ -99,6 +99,7 @@ int main()
 	test<28, complex_type>();
 	test<29, complex_type>();
 	test<30, complex_type>();
+	test<31, complex_type>();
 	test<32, complex_type>();
 	test<33, complex_type>();
 	test<34, complex_type>();
@@ -122,6 +123,7 @@ int main()
 	test<57, complex_type>();
 	test<58, complex_type>();
 	test<60, complex_type>();
+	test<62, complex_type>();
 	test<63, complex_type>();
 	test<64, complex_type>();
 	test<65, complex_type>();
@@ -142,6 +144,7 @@ int main()
 	test<88, complex_type>();
 	test<90, complex_type>();
 	test<91, complex_type>();
+	test<93, complex_type>();
 	test<92, complex_type>();
 	test<95, complex_type>();
 	test<96, complex_type>();
@@ -161,6 +164,7 @@ int main()
 	test<119, complex_type>();
 	test<120, complex_type>();
 	test<121, complex_type>();
+	test<124, complex_type>();
 	test<125, complex_type>();
 	test<126, complex_type>();
 	test<128, complex_type>();
