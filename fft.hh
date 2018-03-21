@@ -116,6 +116,20 @@ struct Dit<2, 2, STRIDE, TYPE, SIGN>
 	}
 };
 
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<2, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 2;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, l1 = 0; k0 < QUOTIENT; ++k0, ++k1, l1 += STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out[k0], z[l1] * out[k1]);
+	}
+};
+
 template <int STRIDE, typename TYPE>
 struct Dit<3, 3, STRIDE, TYPE, -1>
 {
@@ -142,6 +156,25 @@ struct Dit<3, 3, STRIDE, TYPE, 1>
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
 		dft(out, out + 1, out + 2, in[0], in[STRIDE], in[2 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<3, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 3;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT,
+				l1 = 0, l2 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2,
+				l1 += STRIDE, l2 += 2 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2]);
 	}
 };
 
@@ -178,6 +211,25 @@ struct Dit<4, 4, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<4, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 4;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3]);
 	}
 };
 
@@ -219,6 +271,25 @@ struct Dit<5, 5, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<5, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 5;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4]);
 	}
 };
 
@@ -268,6 +339,25 @@ struct Dit<7, 7, STRIDE, TYPE, 1>
 	}
 };
 
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<7, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 7;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6]);
+	}
+};
+
 template <int STRIDE, typename TYPE>
 struct Dit<8, 8, STRIDE, TYPE, -1>
 {
@@ -309,6 +399,25 @@ struct Dit<8, 8, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<8, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 8;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7]);
 	}
 };
 
@@ -365,6 +474,25 @@ struct Dit<11, 11, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<11, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 11;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10]);
 	}
 };
 
@@ -426,6 +554,25 @@ struct Dit<13, 13, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<13, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 13;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT, k11 = 11 * QUOTIENT, k12 = 12 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0, l11 = 0, l12 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10, ++k11, ++k12,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE, l11 += 11 * STRIDE, l12 += 12 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10, out + k11, out + k12,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10], z[l11] * out[k11], z[l12] * out[k12]);
 	}
 };
 
@@ -497,6 +644,25 @@ struct Dit<17, 17, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12, out + 13, out + 14, out + 15, out + 16,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE], in[13 * STRIDE], in[14 * STRIDE], in[15 * STRIDE], in[16 * STRIDE]);
+	}
+};
+
+template <int BINS, int STRIDE, typename TYPE, int SIGN>
+struct Dit<17, BINS, STRIDE, TYPE, SIGN>
+{
+	static const int RADIX = 17;
+	static const int QUOTIENT = BINS / RADIX;
+	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
+	{
+		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
+			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
+		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT, k11 = 11 * QUOTIENT, k12 = 12 * QUOTIENT, k13 = 13 * QUOTIENT, k14 = 14 * QUOTIENT, k15 = 15 * QUOTIENT, k16 = 16 * QUOTIENT,
+				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0, l11 = 0, l12 = 0, l13 = 0, l14 = 0, l15 = 0, l16 = 0;
+				k0 < QUOTIENT;
+				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10, ++k11, ++k12, ++k13, ++k14, ++k15, ++k16,
+				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE, l11 += 11 * STRIDE, l12 += 12 * STRIDE, l13 += 13 * STRIDE, l14 += 14 * STRIDE, l15 += 15 * STRIDE, l16 += 16 * STRIDE)
+			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10, out + k11, out + k12, out + k13, out + k14, out + k15, out + k16,
+				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10], z[l11] * out[k11], z[l12] * out[k12], z[l13] * out[k13], z[l14] * out[k14], z[l15] * out[k15], z[l16] * out[k16]);
 	}
 };
 
@@ -573,173 +739,6 @@ struct Dit<19, 19, STRIDE, TYPE, 1>
 	{
 		dft(out, out + 1, out + 2, out + 3, out + 4, out + 5, out + 6, out + 7, out + 8, out + 9, out + 10, out + 11, out + 12, out + 13, out + 14, out + 15, out + 16, out + 17, out + 18,
 			in[0], in[STRIDE], in[2 * STRIDE], in[3 * STRIDE], in[4 * STRIDE], in[5 * STRIDE], in[6 * STRIDE], in[7 * STRIDE], in[8 * STRIDE], in[9 * STRIDE], in[10 * STRIDE], in[11 * STRIDE], in[12 * STRIDE], in[13 * STRIDE], in[14 * STRIDE], in[15 * STRIDE], in[16 * STRIDE], in[17 * STRIDE], in[18 * STRIDE]);
-	}
-};
-
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<2, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 2;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, l1 = 0; k0 < QUOTIENT; ++k0, ++k1, l1 += STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out[k0], z[l1] * out[k1]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<3, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 3;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT,
-				l1 = 0, l2 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2,
-				l1 += STRIDE, l2 += 2 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<4, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 4;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<5, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 5;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0, l4 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3, ++k4,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<7, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 7;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<8, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 8;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<11, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 11;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<13, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 13;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT, k11 = 11 * QUOTIENT, k12 = 12 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0, l11 = 0, l12 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10, ++k11, ++k12,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE, l11 += 11 * STRIDE, l12 += 12 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10, out + k11, out + k12,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10], z[l11] * out[k11], z[l12] * out[k12]);
-	}
-};
-
-template <int BINS, int STRIDE, typename TYPE, int SIGN>
-struct Dit<17, BINS, STRIDE, TYPE, SIGN>
-{
-	static const int RADIX = 17;
-	static const int QUOTIENT = BINS / RADIX;
-	static void dit(TYPE *out, const TYPE *in, const TYPE *z)
-	{
-		for (int o = 0, i = 0; o < BINS; o += QUOTIENT, i += STRIDE)
-			Dit<split(QUOTIENT), QUOTIENT, RADIX * STRIDE, TYPE, SIGN>::dit(out + o, in + i, z);
-		for (int k0 = 0, k1 = QUOTIENT, k2 = 2 * QUOTIENT, k3 = 3 * QUOTIENT, k4 = 4 * QUOTIENT, k5 = 5 * QUOTIENT, k6 = 6 * QUOTIENT, k7 = 7 * QUOTIENT, k8 = 8 * QUOTIENT, k9 = 9 * QUOTIENT, k10 = 10 * QUOTIENT, k11 = 11 * QUOTIENT, k12 = 12 * QUOTIENT, k13 = 13 * QUOTIENT, k14 = 14 * QUOTIENT, k15 = 15 * QUOTIENT, k16 = 16 * QUOTIENT,
-				l1 = 0, l2 = 0, l3 = 0, l4 = 0, l5 = 0, l6 = 0, l7 = 0, l8 = 0, l9 = 0, l10 = 0, l11 = 0, l12 = 0, l13 = 0, l14 = 0, l15 = 0, l16 = 0;
-				k0 < QUOTIENT;
-				++k0, ++k1, ++k2, ++k3, ++k4, ++k5, ++k6, ++k7, ++k8, ++k9, ++k10, ++k11, ++k12, ++k13, ++k14, ++k15, ++k16,
-				l1 += STRIDE, l2 += 2 * STRIDE, l3 += 3 * STRIDE, l4 += 4 * STRIDE, l5 += 5 * STRIDE, l6 += 6 * STRIDE, l7 += 7 * STRIDE, l8 += 8 * STRIDE, l9 += 9 * STRIDE, l10 += 10 * STRIDE, l11 += 11 * STRIDE, l12 += 12 * STRIDE, l13 += 13 * STRIDE, l14 += 14 * STRIDE, l15 += 15 * STRIDE, l16 += 16 * STRIDE)
-			Dit<RADIX, RADIX, STRIDE, TYPE, SIGN>::dft(out + k0, out + k1, out + k2, out + k3, out + k4, out + k5, out + k6, out + k7, out + k8, out + k9, out + k10, out + k11, out + k12, out + k13, out + k14, out + k15, out + k16,
-				out[k0], z[l1] * out[k1], z[l2] * out[k2], z[l3] * out[k3], z[l4] * out[k4], z[l5] * out[k5], z[l6] * out[k6], z[l7] * out[k7], z[l8] * out[k8], z[l9] * out[k9], z[l10] * out[k10], z[l11] * out[k11], z[l12] * out[k12], z[l13] * out[k13], z[l14] * out[k14], z[l15] * out[k15], z[l16] * out[k16]);
 	}
 };
 
