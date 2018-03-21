@@ -37,7 +37,7 @@ dft_header() {
 		echo -n " TYPE *out$x,"
 	done
 	echo
-	echo -n "		"
+	echo -n "			"
 	for ((x = 0; x < RADIX-1; x++)) ; do
 		echo -n "TYPE in$x, "
 	done
