@@ -11,18 +11,6 @@ You should have received a copy of the CC0 Public Domain Dedication along with t
 namespace FFT {
 
 template <typename TYPE>
-static inline TYPE half(TYPE a)
-{
-	return typename TYPE::value_type(0.5) * a;
-}
-
-template <typename TYPE>
-static inline TYPE sqrt3(TYPE a)
-{
-	return std::sqrt(typename TYPE::value_type(3)) * a;
-}
-
-template <typename TYPE>
 static inline TYPE rsqrt2(TYPE a)
 {
 	return (std::sqrt(typename TYPE::value_type(2)) / typename TYPE::value_type(2)) * a;
@@ -155,10 +143,12 @@ struct Dit<3, 3, STRIDE, TYPE, 1>
 	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2,
 			TYPE in0, TYPE in1, TYPE in2)
 	{
-		TYPE a(in1 + in2), b(sqrt3(twiddle(in1, in2)));
-		*out0 = in0 + a;
-		*out1 = in0 - half(a + b);
-		*out2 = in0 - half(a - b);
+		TYPE a1(in1 + in2), t1(twiddle(in1, in2));
+		TYPE c1(cx<1,3>(a1));
+		TYPE s1(sx<1,3>(t1));
+		*out0 = in0 + a1;
+		*out1 = in0 + c1 - s1;
+		*out2 = in0 + c1 + s1;
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
