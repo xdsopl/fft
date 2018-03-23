@@ -136,20 +136,24 @@ struct Dit<2, BINS, STRIDE, TYPE, SIGN>
 template <int STRIDE, typename TYPE>
 struct Dit<3, 3, STRIDE, TYPE, -1>
 {
-	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE in0, TYPE in1, TYPE in2)
+	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2,
+			TYPE in0, TYPE in1, TYPE in2)
 	{
-		Dit<3, 3, STRIDE, TYPE, 1>::dft(out0, out2, out1, in0, in1, in2);
+		Dit<3, 3, STRIDE, TYPE, 1>::dft(out0, out2, out1,
+			in0, in1, in2);
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, in[0], in[STRIDE], in[2 * STRIDE]);
+		dft(out, out + 1, out + 2,
+			in[0], in[STRIDE], in[2 * STRIDE]);
 	}
 };
 
 template <int STRIDE, typename TYPE>
 struct Dit<3, 3, STRIDE, TYPE, 1>
 {
-	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2, TYPE in0, TYPE in1, TYPE in2)
+	static inline void dft(TYPE *out0, TYPE *out1, TYPE *out2,
+			TYPE in0, TYPE in1, TYPE in2)
 	{
 		TYPE a(in1 + in2), b(sqrt3(twiddle(in1, in2)));
 		*out0 = in0 + a;
@@ -158,7 +162,8 @@ struct Dit<3, 3, STRIDE, TYPE, 1>
 	}
 	static inline void dit(TYPE *out, const TYPE *in, const TYPE *)
 	{
-		dft(out, out + 1, out + 2, in[0], in[STRIDE], in[2 * STRIDE]);
+		dft(out, out + 1, out + 2,
+			in[0], in[STRIDE], in[2 * STRIDE]);
 	}
 };
 
