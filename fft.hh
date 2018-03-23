@@ -76,6 +76,7 @@ static constexpr int split(int N)
 		(!(N % 5)) ? 5 :
 		(!(N % 3)) ? 3 :
 		(!(N % 8) && pow8(N)) ? 8 :
+		(!(N % 8) && pow8(N / 2)) ? 2 :
 		(!(N % 4) && pow4(N)) ? 4 :
 		(!(N % 2)) ? 2 :
 		1;
