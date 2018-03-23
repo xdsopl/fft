@@ -71,7 +71,7 @@ static constexpr int pow4(int N)
 
 static constexpr int pow8(int N)
 {
-	return pow2(N) && (N & 0xb6db6db6);
+	return pow2(N) && (N & 0x49249249);
 }
 
 static constexpr int split(int N)
