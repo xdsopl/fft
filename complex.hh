@@ -40,6 +40,10 @@ public:
 	{
 		return *this = *this / a;
 	}
+	inline Complex<T> operator /= (Complex<T> a)
+	{
+		return *this = *this / a;
+	}
 };
 
 template <typename T>
