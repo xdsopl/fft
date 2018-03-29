@@ -15,6 +15,7 @@ class Complex
 public:
 	typedef T value_type;
 	Complex() : re(0), im(0) {}
+	Complex(T r) : re(r), im(0) {}
 	Complex(T r, T i) : re(r), im(i) {}
 	inline T &real() { return re; }
 	inline T &imag() { return im; }
