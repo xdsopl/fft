@@ -29,6 +29,10 @@ public:
 	{
 		return *this = a + *this;
 	}
+	inline Complex<T> operator -= (Complex<T> a)
+	{
+		return *this = *this - a;
+	}
 	inline Complex<T> operator *= (Complex<T> a)
 	{
 		return *this = a * *this;
