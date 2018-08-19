@@ -17,8 +17,10 @@ public:
 	Complex() : re(0), im(0) {}
 	Complex(T r) : re(r), im(0) {}
 	Complex(T r, T i) : re(r), im(i) {}
-	inline T &real() { return re; }
-	inline T &imag() { return im; }
+	inline T real() const { return re; }
+	inline T imag() const { return im; }
+	inline void real(T r) { re = r; }
+	inline void imag(T i) { im = i; }
 	inline Complex<T> operator = (T a)
 	{
 		real() = a;
