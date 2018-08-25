@@ -120,4 +120,10 @@ static inline T arg(Complex<T> a)
 	return atan2(a.imag(), a.real());
 }
 
+template <typename T>
+static inline T norm(Complex<T> a)
+{
+	return a.real() * a.real() + a.imag() * a.imag();
+}
+
 #endif
